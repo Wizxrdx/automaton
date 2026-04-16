@@ -1,0 +1,93 @@
+[gd_scene load_steps=13 format=3 uid="uid://b4cifvtfyudn2"]
+
+[ext_resource type="Script" uid="uid://d1s2xbh8c22yr" path="res://World/test_world.gd" id="1_il2xo"]
+[ext_resource type="Script" uid="uid://d1qpm2qftegdt" path="res://World/interactable.gd" id="2_an0lv"]
+[ext_resource type="Texture2D" uid="uid://h7qp6n0lb0ki" path="res://Units/Machine.png" id="2_rspi7"]
+[ext_resource type="PackedScene" uid="uid://0tr6kh6eyqq2" path="res://Player/player.tscn" id="4_ftki0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ohxov"]
+size = Vector2(16, 648)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_il2xo"]
+size = Vector2(16, 648)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_an0lv"]
+size = Vector2(1184, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rspi7"]
+size = Vector2(1184, 16)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_ftki0"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ftki0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w6qo1"]
+size = Vector2(80, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ftki0"]
+size = Vector2(80, 80)
+
+[node name="TestWorld" type="Node2D"]
+script = ExtResource("1_il2xo")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.48235294, 0.3254902, 0.19215687, 1)
+
+[node name="left" type="StaticBody2D" parent="."]
+position = Vector2(-8, 328)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="left"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_ohxov")
+
+[node name="right" type="StaticBody2D" parent="."]
+position = Vector2(1160, 320)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="right"]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_il2xo")
+
+[node name="top" type="StaticBody2D" parent="."]
+position = Vector2(576, -8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="top"]
+shape = SubResource("RectangleShape2D_an0lv")
+
+[node name="bottom" type="StaticBody2D" parent="."]
+position = Vector2(576, 656)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="bottom"]
+shape = SubResource("RectangleShape2D_rspi7")
+
+[node name="SpawnPoint" type="Marker2D" parent="."]
+position = Vector2(576, 104)
+
+[node name="Interactable" type="Area2D" parent="."]
+position = Vector2(184, 320)
+script = ExtResource("2_an0lv")
+
+[node name="Sprite2D" type="Sprite2D" parent="Interactable"]
+position = Vector2(-9.536743e-06, -5.722046e-06)
+scale = Vector2(80, 80.00002)
+texture = SubResource("CanvasTexture_ftki0")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Interactable"]
+physics_material_override = SubResource("PhysicsMaterial_ftki0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable/StaticBody2D"]
+shape = SubResource("RectangleShape2D_w6qo1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+position = Vector2(-1.5258789e-05, 0)
+shape = SubResource("RectangleShape2D_ftki0")
+
+[node name="Machine" type="Node2D" parent="."]
+position = Vector2(880, 304)
+
+[node name="Sprite2D" type="Sprite2D" parent="Machine"]
+texture = ExtResource("2_rspi7")
+
+[node name="Player" parent="." instance=ExtResource("4_ftki0")]
+position = Vector2(888, 504)
