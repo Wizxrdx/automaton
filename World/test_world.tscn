@@ -1,93 +1,247 @@
-[gd_scene load_steps=13 format=3 uid="uid://b4cifvtfyudn2"]
+[gd_scene load_steps=9 format=3 uid="uid://b4cifvtfyudn2"]
 
 [ext_resource type="Script" uid="uid://d1s2xbh8c22yr" path="res://World/test_world.gd" id="1_il2xo"]
-[ext_resource type="Script" uid="uid://d1qpm2qftegdt" path="res://World/interactable.gd" id="2_an0lv"]
-[ext_resource type="Texture2D" uid="uid://h7qp6n0lb0ki" path="res://Units/Machine.png" id="2_rspi7"]
 [ext_resource type="PackedScene" uid="uid://0tr6kh6eyqq2" path="res://Player/player.tscn" id="4_ftki0"]
+[ext_resource type="PackedScene" uid="uid://b0k67nqfbiubd" path="res://Items/item.tscn" id="4_kgiip"]
+[ext_resource type="PackedScene" uid="uid://if38ha7fwstg" path="res://Interactables/machine.tscn" id="4_w6qo1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ohxov"]
-size = Vector2(16, 648)
+size = Vector2(16, 2368)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_il2xo"]
-size = Vector2(16, 648)
+size = Vector2(16, 2400)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_an0lv"]
-size = Vector2(1184, 16)
+size = Vector2(5712, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rspi7"]
-size = Vector2(1184, 16)
-
-[sub_resource type="CanvasTexture" id="CanvasTexture_ftki0"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ftki0"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_w6qo1"]
-size = Vector2(80, 80)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ftki0"]
-size = Vector2(80, 80)
+size = Vector2(5712, 16)
 
 [node name="TestWorld" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_il2xo")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-offset_right = 1152.0
-offset_bottom = 648.0
+offset_right = 5696.0
+offset_bottom = 2368.0
 color = Color(0.48235294, 0.3254902, 0.19215687, 1)
 
 [node name="left" type="StaticBody2D" parent="."]
 position = Vector2(-8, 328)
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="left"]
-position = Vector2(0, -4)
+position = Vector2(0, 856)
 shape = SubResource("RectangleShape2D_ohxov")
 
 [node name="right" type="StaticBody2D" parent="."]
 position = Vector2(1160, 320)
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="right"]
-position = Vector2(0, 4)
+position = Vector2(4544, 864)
 shape = SubResource("RectangleShape2D_il2xo")
 
 [node name="top" type="StaticBody2D" parent="."]
 position = Vector2(576, -8)
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="top"]
+position = Vector2(2264, 0)
 shape = SubResource("RectangleShape2D_an0lv")
 
 [node name="bottom" type="StaticBody2D" parent="."]
 position = Vector2(576, 656)
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="bottom"]
+position = Vector2(2264, 1720)
 shape = SubResource("RectangleShape2D_rspi7")
 
 [node name="SpawnPoint" type="Marker2D" parent="."]
 position = Vector2(576, 104)
 
-[node name="Interactable" type="Area2D" parent="."]
-position = Vector2(184, 320)
-script = ExtResource("2_an0lv")
-
-[node name="Sprite2D" type="Sprite2D" parent="Interactable"]
-position = Vector2(-9.536743e-06, -5.722046e-06)
-scale = Vector2(80, 80.00002)
-texture = SubResource("CanvasTexture_ftki0")
-
-[node name="StaticBody2D" type="StaticBody2D" parent="Interactable"]
-physics_material_override = SubResource("PhysicsMaterial_ftki0")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable/StaticBody2D"]
-shape = SubResource("RectangleShape2D_w6qo1")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
-position = Vector2(-1.5258789e-05, 0)
-shape = SubResource("RectangleShape2D_ftki0")
-
-[node name="Machine" type="Node2D" parent="."]
-position = Vector2(880, 304)
-
-[node name="Sprite2D" type="Sprite2D" parent="Machine"]
-texture = ExtResource("2_rspi7")
-
 [node name="Player" parent="." instance=ExtResource("4_ftki0")]
-position = Vector2(888, 504)
+position = Vector2(992, 320)
+
+[node name="Interactable1" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(136, 152)
+
+[node name="Interactable2" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(96, 320)
+
+[node name="Interactable4" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(136, 488)
+
+[node name="Interactable5" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(272, 584)
+
+[node name="Interactable3" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(272, 56)
+
+[node name="Interactable6" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(192, 872)
+
+[node name="Interactable7" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(152, 1040)
+
+[node name="Interactable8" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(192, 1208)
+
+[node name="Interactable9" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(328, 1304)
+
+[node name="Interactable10" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(328, 776)
+
+[node name="Interactable11" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(176, 1568)
+
+[node name="Interactable12" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(136, 1736)
+
+[node name="Interactable13" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(176, 1904)
+
+[node name="Interactable14" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(312, 2000)
+
+[node name="Interactable15" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(312, 1472)
+
+[node name="Interactable16" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(512, 1712)
+
+[node name="Interactable17" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(472, 1880)
+
+[node name="Interactable18" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(512, 2048)
+
+[node name="Interactable19" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(648, 2144)
+
+[node name="Interactable20" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(648, 1616)
+
+[node name="Interactable21" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(496, 976)
+
+[node name="Interactable22" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(456, 1144)
+
+[node name="Interactable23" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(496, 1312)
+
+[node name="Interactable24" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(632, 1408)
+
+[node name="Interactable25" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(632, 880)
+
+[node name="Interactable26" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(912, 1184)
+
+[node name="Interactable27" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(872, 1352)
+
+[node name="Interactable28" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(912, 1520)
+
+[node name="Interactable29" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1048, 1616)
+
+[node name="Interactable30" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1048, 1088)
+
+[node name="Interactable31" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1232, 1448)
+
+[node name="Interactable32" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1192, 1616)
+
+[node name="Interactable33" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1232, 1784)
+
+[node name="Interactable34" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1368, 1880)
+
+[node name="Interactable35" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1368, 1352)
+
+[node name="Interactable36" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(856, 1848)
+
+[node name="Interactable37" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(816, 2016)
+
+[node name="Interactable38" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(856, 2184)
+
+[node name="Interactable39" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(992, 2280)
+
+[node name="Interactable40" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(992, 1752)
+
+[node name="Interactable41" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1336, 720)
+
+[node name="Interactable42" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1296, 888)
+
+[node name="Interactable43" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1336, 1056)
+
+[node name="Interactable44" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1472, 1152)
+
+[node name="Interactable45" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1472, 624)
+
+[node name="Interactable46" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1672, 1728)
+
+[node name="Interactable47" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1632, 1896)
+
+[node name="Interactable48" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1672, 2064)
+
+[node name="Interactable49" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1808, 2160)
+
+[node name="Interactable50" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1808, 1632)
+
+[node name="Interactable51" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1744, 984)
+
+[node name="Interactable52" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1704, 1152)
+
+[node name="Interactable53" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1744, 1320)
+
+[node name="Interactable54" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1880, 1416)
+
+[node name="Interactable55" parent="." instance=ExtResource("4_w6qo1")]
+position = Vector2(1880, 888)
+
+[node name="Item" parent="." instance=ExtResource("4_kgiip")]
+position = Vector2(336, 248)
+item_type = "battery"
+
+[node name="Item2" parent="." instance=ExtResource("4_kgiip")]
+position = Vector2(424, 56)
+
+[node name="Item3" parent="." instance=ExtResource("4_kgiip")]
+position = Vector2(304, 376)
+
+[node name="Item4" parent="." instance=ExtResource("4_kgiip")]
+position = Vector2(240, 504)
+item_type = "battery"
+
+[node name="Item5" parent="." instance=ExtResource("4_kgiip")]
+position = Vector2(416, 568)
