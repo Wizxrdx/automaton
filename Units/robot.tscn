@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cscuxq3vvkt7j"]
+
+[ext_resource type="Script" uid="uid://dd583ogjyb6uw" path="res://Units/robot.gd" id="1_g53dl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4825c"]
+size = Vector2(64, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fwi5a"]
+
+[node name="Robot" type="CharacterBody2D" unique_id=414214495]
+collision_layer = 4
+script = ExtResource("1_g53dl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=735259383]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_4825c")
+
+[node name="movement" type="AnimatedSprite2D" parent="." unique_id=525966789]
+y_sort_enabled = true
+sprite_frames = SubResource("SpriteFrames_fwi5a")

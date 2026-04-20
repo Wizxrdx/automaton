@@ -7,6 +7,8 @@ extends CharacterBody2D
 @export var separation_dist := 45.0
 @export var follow_distance := 60.0
 
+@onready var movement: AnimatedSprite2D = $movement
+
 var player: Node2D
 
 func _ready():
@@ -37,6 +39,38 @@ func _physics_process(_delta: float) -> void:
 		velocity = velocity.move_toward(Vector2.ZERO, friction)
 
 	move_and_slide()
+	update_animation()
+
+func update_animation() -> void:
+	# If the robot is barely moving, stop the animation or keep it on idle
+	if velocity.length() < 10:
+		movement.stop()
+		return
+
+	# Get the angle of movement (-PI to PI)
+	var angle = velocity.angle() 
+	
+	# Convert angle to an index (0-7)
+	# Adding PI/8 offsets the segments so "East" isn't just a tiny sliver at 0
+	var direction_idx = int(round(angle / (PI / 4)))
+	
+	# Wrap the index to stay within 0-7
+	var directions = [
+		"east",      # 0
+		"southeast", # 1
+		"south",     # 2
+		"southwest", # 3
+		"west",      # 4
+		"northwest", # 5
+		"north",     # 6
+		"northeast"  # 7
+	]
+	
+	# Standardize index for the array
+	var anim_name = directions[direction_idx % 8]
+	
+	if movement.animation != anim_name:
+		movement.play(anim_name)
 
 func calculate_separation_force() -> Vector2:
 	var force = Vector2.ZERO

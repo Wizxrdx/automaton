@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://b8bqhuiabierl"]
+
+[ext_resource type="PackedScene" uid="uid://if38ha7fwstg" path="res://Interactables/Base/machine.tscn" id="1_88o3o"]
+[ext_resource type="Texture2D" uid="uid://0uthgc2623rl" path="res://Units/Friendly/AGV.png" id="2_n5a7j"]
+[ext_resource type="PackedScene" uid="uid://d083lmfwijfha" path="res://Units/Friendly/AGV.tscn" id="2_y4uvy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n5a7j"]
+size = Vector2(48, 40)
+
+[node name="ConveyorBeltMachine" unique_id=202833616 instance=ExtResource("1_88o3o")]
+robot_scene = ExtResource("2_y4uvy")
+recipe = {
+"battery": 1,
+"scrap": 1
+}
+
+[node name="CollisionShape2D" parent="." index="0" unique_id=1832198024]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_n5a7j")
+
+[node name="Sprite2D" parent="." index="1" unique_id=1807411384]
+position = Vector2(0, -32)
+texture = ExtResource("2_n5a7j")
+hframes = 2
+vframes = 8

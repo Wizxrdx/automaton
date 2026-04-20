@@ -6,7 +6,8 @@ extends Node2D
 
 var textures = {
 	"battery": preload("res://UI/battery_ui.png"),
-	"scrap": preload("res://UI/scrap_ui.png")
+	"scrap": preload("res://UI/scrap_ui.png"),
+	"tires": preload("res://UI/tires_ui.png")
 }
 
 func _ready() -> void:

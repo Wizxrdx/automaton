@@ -1,18 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://b0k67nqfbiubd"]
+[gd_scene format=3 uid="uid://b0k67nqfbiubd"]
 
 [ext_resource type="Script" uid="uid://cibl1r7jox6xa" path="res://Items/item.gd" id="1_ngtv8"]
-[ext_resource type="Texture2D" uid="uid://03vsulrl814u" path="res://Items/battery.png" id="2_4apt4"]
+[ext_resource type="Texture2D" uid="uid://03vsulrl814u" path="res://Items/Types/battery.png" id="2_4apt4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1qkgg"]
 size = Vector2(32, 3)
 
-[node name="Battery" type="Area2D"]
+[node name="Battery" type="Area2D" unique_id=1795187254]
+y_sort_enabled = true
+collision_mask = 7
 script = ExtResource("1_ngtv8")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1909593229]
 texture_filter = 1
 texture = ExtResource("2_4apt4")
-offset = Vector2(0, -6.5)
+offset = Vector2(0, -32)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2145133508]
 shape = SubResource("RectangleShape2D_1qkgg")

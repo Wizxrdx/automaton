@@ -1,19 +1,20 @@
-[gd_scene load_steps=23 format=3 uid="uid://0tr6kh6eyqq2"]
+[gd_scene format=3 uid="uid://0tr6kh6eyqq2"]
 
 [ext_resource type="Script" uid="uid://cknq4od7wxstx" path="res://Player/player.gd" id="1_4ntmi"]
 [ext_resource type="Texture2D" uid="uid://dg1k8ojbdgg6q" path="res://Player/player_animation.png" id="2_fhl08"]
 [ext_resource type="Texture2D" uid="uid://bcqh0lovddh8k" path="res://UI/bubble.png" id="3_gwnis"]
 [ext_resource type="Script" uid="uid://dagfqsd63xbkf" path="res://Player/thought.gd" id="3_k53q1"]
-[ext_resource type="Texture2D" uid="uid://bvjm136awg17v" path="res://UI/battery_ui.png" id="5_fhl08"]
+[ext_resource type="Texture2D" uid="uid://cvpsl20w332o1" path="res://UI/tires_ui.png" id="5_od3ui"]
 [ext_resource type="Script" uid="uid://d10537g22pxt2" path="res://Player/inventory.gd" id="6_fhl08"]
 [ext_resource type="Texture2D" uid="uid://67bpvabsn6gt" path="res://UI/swap.png" id="6_vtle1"]
+[ext_resource type="Texture2D" uid="uid://03vsulrl814u" path="res://Items/Types/battery.png" id="8_od3ui"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hvfyp"]
 size = Vector2(38, 10)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4ntmi"]
-radius = 19.0
-height = 98.0
+radius = 32.0
+height = 96.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vtle1"]
 atlas = ExtResource("2_fhl08")
@@ -142,54 +143,58 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" unique_id=1401464434]
 y_sort_enabled = true
 collision_layer = 2
+collision_mask = 3
 script = ExtResource("1_4ntmi")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1710762166]
 position = Vector2(0, -5)
 shape = SubResource("RectangleShape2D_hvfyp")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1390136374]
 zoom = Vector2(0.4, 0.4)
 
-[node name="InteractRay" type="RayCast2D" parent="."]
+[node name="InteractRay" type="RayCast2D" parent="." unique_id=2096721844]
 target_position = Vector2(0, 35)
 
-[node name="PickupArea" type="Area2D" parent="."]
+[node name="PickupArea" type="Area2D" parent="." unique_id=280353336]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea" unique_id=1672946176]
 position = Vector2(0, -5)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_4ntmi")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=880403754]
+y_sort_enabled = true
 sprite_frames = SubResource("SpriteFrames_fhl08")
-animation = &"walk_west"
+animation = &"idle_south"
 offset = Vector2(0, -32)
 
-[node name="thought" type="Node2D" parent="."]
+[node name="thought" type="Node2D" parent="." unique_id=739852933]
 z_index = 100
 script = ExtResource("3_k53q1")
 
-[node name="background" type="Sprite2D" parent="thought"]
+[node name="background" type="Sprite2D" parent="thought" unique_id=1233494488]
 position = Vector2(42, -80)
 texture = ExtResource("3_gwnis")
 
-[node name="icon" type="Sprite2D" parent="thought"]
-position = Vector2(42, -80)
-texture = ExtResource("5_fhl08")
+[node name="icon" type="Sprite2D" parent="thought" unique_id=1312433540]
+position = Vector2(43, -79)
+texture = ExtResource("5_od3ui")
 
-[node name="swap" type="Sprite2D" parent="thought"]
-visible = false
+[node name="swap" type="Sprite2D" parent="thought" unique_id=303214116]
 position = Vector2(44, -81)
 texture = ExtResource("6_vtle1")
 
-[node name="Inventory" type="Node2D" parent="."]
+[node name="Inventory" type="Node2D" parent="." unique_id=2134062710]
 script = ExtResource("6_fhl08")
 
-[node name="item" type="Sprite2D" parent="Inventory"]
+[node name="item" type="Sprite2D" parent="Inventory" unique_id=2141904189]
+y_sort_enabled = true
+texture = ExtResource("8_od3ui")
+offset = Vector2(0, -48)
 
 [connection signal="area_entered" from="PickupArea" to="." method="_on_pickup_area_area_entered"]
 [connection signal="area_exited" from="PickupArea" to="." method="_on_pickup_area_area_exited"]

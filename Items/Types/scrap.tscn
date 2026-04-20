@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://lswo77r1fq6i"]
+
+[ext_resource type="PackedScene" uid="uid://b0k67nqfbiubd" path="res://Items/item.tscn" id="1_8chqy"]
+[ext_resource type="Texture2D" uid="uid://b4xhyb2jx5wym" path="res://Items/Types/scrap.png" id="2_mgrji"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mgrji"]
+size = Vector2(33, 16)
+
+[node name="Scrap" unique_id=1795187254 instance=ExtResource("1_8chqy")]
+
+[node name="Sprite2D" parent="." index="0" unique_id=1909593229]
+texture = ExtResource("2_mgrji")
+offset = Vector2(0, -32)
+
+[node name="CollisionShape2D" parent="." index="1" unique_id=2145133508]
+position = Vector2(-0.5, -8)
+shape = SubResource("RectangleShape2D_mgrji")
