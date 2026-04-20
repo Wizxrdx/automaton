@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-@export var robot_scene = preload("res://Units/robot.tscn")
+@export var robot_scene = preload("res://Units/Friendly/AGV/AGV.tscn")
 var highlighted := false
 
 # Definition of what this machine needs

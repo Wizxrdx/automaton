@@ -69,91 +69,57 @@ position = Vector2(576, 104)
 position = Vector2(992, 320)
 
 [node name="ConveyorBeltMachine" parent="." unique_id=202833616 instance=ExtResource("4_w6qo1")]
-position = Vector2(600, 456)
+position = Vector2(624, 512)
 
-[node name="ConveyorBeltMachine2" parent="." unique_id=1431612116 instance=ExtResource("4_w6qo1")]
-position = Vector2(672, 456)
-
-[node name="ConveyorBeltMachine3" parent="." unique_id=685144293 instance=ExtResource("4_w6qo1")]
-position = Vector2(744, 456)
-
-[node name="ConveyorBeltMachine4" parent="." unique_id=320353800 instance=ExtResource("4_w6qo1")]
-position = Vector2(816, 456)
-
-[node name="ConveyorBeltMachine5" parent="." unique_id=1027195921 instance=ExtResource("4_w6qo1")]
-position = Vector2(888, 456)
-
-[node name="ConveyorBeltMachine6" parent="." unique_id=84164359 instance=ExtResource("4_w6qo1")]
-position = Vector2(600, 520)
-
-[node name="ConveyorBeltMachine7" parent="." unique_id=1097122641 instance=ExtResource("4_w6qo1")]
-position = Vector2(672, 520)
-
-[node name="ConveyorBeltMachine8" parent="." unique_id=692242063 instance=ExtResource("4_w6qo1")]
-position = Vector2(744, 520)
-
-[node name="ConveyorBeltMachine9" parent="." unique_id=1301456782 instance=ExtResource("4_w6qo1")]
-position = Vector2(816, 520)
-
-[node name="ConveyorBeltMachine10" parent="." unique_id=1515564262 instance=ExtResource("4_w6qo1")]
-position = Vector2(888, 520)
-
-[node name="ConveyorBeltMachine11" parent="." unique_id=1047163613 instance=ExtResource("4_w6qo1")]
-position = Vector2(600, 584)
-
-[node name="ConveyorBeltMachine12" parent="." unique_id=1538704934 instance=ExtResource("4_w6qo1")]
-position = Vector2(672, 584)
-
-[node name="ConveyorBeltMachine13" parent="." unique_id=232504990 instance=ExtResource("4_w6qo1")]
-position = Vector2(744, 584)
-
-[node name="ConveyorBeltMachine14" parent="." unique_id=731668625 instance=ExtResource("4_w6qo1")]
-position = Vector2(816, 584)
-
-[node name="ConveyorBeltMachine15" parent="." unique_id=1775425827 instance=ExtResource("4_w6qo1")]
-position = Vector2(888, 584)
-
-[node name="ConveyorBeltMachine16" parent="." unique_id=1395048522 instance=ExtResource("4_w6qo1")]
-position = Vector2(600, 648)
-
-[node name="ConveyorBeltMachine17" parent="." unique_id=215030797 instance=ExtResource("4_w6qo1")]
-position = Vector2(672, 648)
-
-[node name="ConveyorBeltMachine18" parent="." unique_id=1129800380 instance=ExtResource("4_w6qo1")]
-position = Vector2(744, 648)
-
-[node name="ConveyorBeltMachine19" parent="." unique_id=34957420 instance=ExtResource("4_w6qo1")]
-position = Vector2(816, 648)
-
-[node name="ConveyorBeltMachine20" parent="." unique_id=1966462588 instance=ExtResource("4_w6qo1")]
-position = Vector2(888, 648)
+[node name="ConveyorBeltMachine2" parent="." unique_id=1035219624 instance=ExtResource("4_w6qo1")]
+position = Vector2(688, 512)
 
 [node name="Tires" parent="." unique_id=1795187254 instance=ExtResource("4_8h8jw")]
+y_sort_enabled = false
 position = Vector2(704, 248)
+collision_mask = 1
 
 [node name="Tires2" parent="." unique_id=1528635972 instance=ExtResource("4_8h8jw")]
+y_sort_enabled = false
 position = Vector2(608, 312)
+collision_mask = 1
 
 [node name="Scrap" parent="." unique_id=1595645793 instance=ExtResource("5_ioycy")]
+y_sort_enabled = false
 position = Vector2(744, 344)
+collision_mask = 1
 
 [node name="Scrap2" parent="." unique_id=474237926 instance=ExtResource("5_ioycy")]
+y_sort_enabled = false
 position = Vector2(648, 376)
+collision_mask = 1
 
 [node name="Battery" parent="." unique_id=1928234017 instance=ExtResource("4_kgiip")]
+y_sort_enabled = false
 position = Vector2(840, 248)
+collision_mask = 1
 
 [node name="Battery2" parent="." unique_id=1277612746 instance=ExtResource("4_kgiip")]
+y_sort_enabled = false
 position = Vector2(680, 304)
+collision_mask = 1
 
 [node name="Battery3" parent="." unique_id=989089980 instance=ExtResource("4_kgiip")]
+y_sort_enabled = false
 position = Vector2(640, 216)
+collision_mask = 1
 
 [node name="Battery4" parent="." unique_id=938175273 instance=ExtResource("4_kgiip")]
+y_sort_enabled = false
 position = Vector2(768, 272)
+collision_mask = 1
 
 [node name="Scrap3" parent="." unique_id=485909432 instance=ExtResource("5_ioycy")]
+y_sort_enabled = false
 position = Vector2(824, 368)
+collision_mask = 1
 
 [node name="Tires3" parent="." unique_id=782139577 instance=ExtResource("4_8h8jw")]
+y_sort_enabled = false
 position = Vector2(720, 384)
+collision_mask = 1

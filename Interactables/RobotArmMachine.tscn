@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://ctf1hce7y2wse"]
+
+[ext_resource type="PackedScene" uid="uid://if38ha7fwstg" path="res://Interactables/Base/machine.tscn" id="1_m6vix"]
+[ext_resource type="PackedScene" uid="uid://ckgkf12sndwjd" path="res://Units/Friendly/RobotArm.tscn" id="2_g2fhc"]
+
+[node name="StaticBody2D" unique_id=896008313 instance=ExtResource("1_m6vix")]
+robot_scene = ExtResource("2_g2fhc")

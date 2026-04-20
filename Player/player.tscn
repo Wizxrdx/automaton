@@ -12,6 +12,9 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hvfyp"]
 size = Vector2(38, 10)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_od3ui"]
+size = Vector2(32, 32)
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4ntmi"]
 radius = 32.0
 height = 96.0
@@ -156,8 +159,9 @@ shape = SubResource("RectangleShape2D_hvfyp")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1390136374]
 zoom = Vector2(0.4, 0.4)
 
-[node name="InteractRay" type="RayCast2D" parent="." unique_id=2096721844]
-target_position = Vector2(0, 35)
+[node name="InteractRay" type="ShapeCast2D" parent="." unique_id=1802014474]
+shape = SubResource("RectangleShape2D_od3ui")
+collision_mask = 5
 
 [node name="PickupArea" type="Area2D" parent="." unique_id=280353336]
 

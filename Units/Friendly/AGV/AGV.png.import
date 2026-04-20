@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://0uthgc2623rl"
-path="res://.godot/imported/AGV.png-12d9c8561ccafd9168e3fdf4241493de.ctex"
+path="res://.godot/imported/AGV.png-50f53fbb0c60136026bc6a34304f225a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Units/Friendly/AGV.png"
-dest_files=["res://.godot/imported/AGV.png-12d9c8561ccafd9168e3fdf4241493de.ctex"]
+source_file="res://Units/Friendly/AGV/AGV.png"
+dest_files=["res://.godot/imported/AGV.png-50f53fbb0c60136026bc6a34304f225a.ctex"]
 
 [params]
 
