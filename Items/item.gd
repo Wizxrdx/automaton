@@ -10,30 +10,38 @@ var on_cooldown: bool = false
 
 func _ready():
 	add_to_group("item")
+	# Ensure Pickable is on so mouse signals work
+	input_pickable = true
+	# Connect mouse signals
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
 
 func get_item_type() -> String:
 	return item_type
 
 func set_highlight(state: bool):
-	if sprite:
-		sprite.modulate = Color(1, 1, 0.6) if state else Color(1, 1, 1)
+	sprite.modulate = Color(1.5, 1.5, 1.1) if state else Color(1, 1, 1)
 
-# Call this when the item is picked up (by player OR robot)
+func _on_mouse_entered():
+	if can_be_picked_up():
+		set_highlight(true)
+
+func _on_mouse_exited():
+	set_highlight(false)
+
 func pick_up():
 	is_held = true
-	on_cooldown = false # Cancel any active cooldowns when grabbed
+	on_cooldown = false 
+	set_highlight(false) # Turn off highlight when grabbed
 
-# Called by ItemManager.gd when spawned into the world
 func drop_to_ground():
 	is_held = false
 	_start_cooldown()
 
-# Internal timer function
 func _start_cooldown():
 	on_cooldown = true
 	await get_tree().create_timer(cooldown_time).timeout
 	on_cooldown = false
 
-# The robotic arm checks this function before setting it as a target
 func can_be_picked_up() -> bool:
 	return not is_held and not on_cooldown

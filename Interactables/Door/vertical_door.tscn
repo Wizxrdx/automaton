@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://dnop8su1clcoc"]
+
+[ext_resource type="Texture2D" uid="uid://bcej2pmg4ngl6" path="res://Interactables/Door/door.png" id="1_h1dpw"]
+[ext_resource type="Script" uid="uid://dd2j6npw8o4k6" path="res://Interactables/Door/door.gd" id="1_t5dvm"]
+[ext_resource type="Script" uid="uid://b68tpmx3hykbw" path="res://Interactables/Door/terminal.gd" id="3_41akm"]
+[ext_resource type="Texture2D" uid="uid://bfvfcr81fcxeq" path="res://Interactables/Door/terminal.png" id="3_bwv6u"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_127u2"]
+size = Vector2(32, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bwv6u"]
+size = Vector2(32, 46)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h1dpw"]
+size = Vector2(32, 82)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t5dvm"]
+size = Vector2(36, 24)
+
+[node name="VerticalDoor" type="Area2D" unique_id=801201742]
+y_sort_enabled = true
+script = ExtResource("1_t5dvm")
+
+[node name="Door" type="Sprite2D" parent="." unique_id=1560877932]
+y_sort_enabled = true
+texture = ExtResource("1_h1dpw")
+offset = Vector2(0, -64)
+hframes = 2
+vframes = 5
+frame = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=735490053]
+y_sort_enabled = true
+position = Vector2(0, -64)
+shape = SubResource("RectangleShape2D_127u2")
+
+[node name="TopDoor" type="StaticBody2D" parent="." unique_id=1440839578]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="TopDoor" unique_id=668474204]
+y_sort_enabled = true
+position = Vector2(0, -105)
+shape = SubResource("RectangleShape2D_bwv6u")
+
+[node name="DownDoor" type="StaticBody2D" parent="." unique_id=84698132]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DownDoor" unique_id=830323999]
+position = Vector2(0, -41)
+shape = SubResource("RectangleShape2D_h1dpw")
+
+[node name="Terminal" type="StaticBody2D" parent="." unique_id=1972370013]
+y_sort_enabled = true
+position = Vector2(-72, -136)
+collision_mask = 3
+script = ExtResource("3_41akm")
+
+[node name="Sprite2D" type="Sprite2D" parent="Terminal" unique_id=1392184641]
+y_sort_enabled = true
+texture = ExtResource("3_bwv6u")
+offset = Vector2(0, -32)
+vframes = 2
+frame = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terminal" unique_id=399911154]
+y_sort_enabled = true
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_t5dvm")

@@ -118,6 +118,7 @@ animations = [{
 y_sort_enabled = true
 collision_layer = 8
 collision_mask = 5
+input_pickable = true
 script = ExtResource("1_bic4p")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1729584105]
@@ -148,3 +149,6 @@ polygon = PackedVector2Array(-20.258192, 192, 20.258192, 192, 1.266137, -40, 0, 
 
 [node name="WallSensor" type="RayCast2D" parent="." unique_id=1596926423]
 target_position = Vector2(0, 592)
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

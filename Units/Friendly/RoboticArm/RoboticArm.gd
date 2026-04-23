@@ -46,11 +46,11 @@ func _physics_process(_delta: float) -> void:
 			if is_instance_valid(target_agv):
 				move_towards_target(target_agv.global_position, 0.0)
 			else:
+				# If AGV died or vanished while we were moving to it
 				_drop_item_on_ground()
 				_reset_state()
 		
 		State.LATCHED:
-			# If latched to an enemy, stay on top of them
 			if is_instance_valid(target_enemy):
 				global_position = target_enemy.global_position
 				velocity = Vector2.ZERO
@@ -60,20 +60,41 @@ func _physics_process(_delta: float) -> void:
 # --- THE COMMAND SYSTEM ---
 
 func set_target(new_target: Node2D):
-	if current_state != State.IDLE: return # Don't override if busy
+	if current_state != State.IDLE: return 
 	
 	if new_target.is_in_group("item"):
-		target_item = new_target
-		current_state = State.MOVING_TO_ITEM
+		# CHECK FOR AGV FIRST
+		var free_agv = _find_free_agv()
+		if free_agv:
+			target_item = new_target
+			target_agv = free_agv
+			target_agv.is_reserved = true # Lock it down now!
+			current_state = State.MOVING_TO_ITEM
+			print("Robot: AGV secured. Fetching item.")
+		else:
+			print("Robot: Command rejected. No free AGVs available.")
+			# Visual feedback: flash red briefly maybe?
+			modulate = Color(2, 0.5, 0.5)
+			await get_tree().create_timer(0.2).timeout
+			modulate = Color(1, 1, 1)
+
 	elif new_target.is_in_group("enemy"):
 		target_enemy = new_target
 		current_state = State.MOVING_TO_ITEM
+
+func _find_free_agv() -> Node2D:
+	var agvs = get_tree().get_nodes_in_group("agv")
+	for agv in agvs:
+		# Check if AGV is not full and not already being headed to by another arm
+		if not agv.has_item() and not agv.is_reserved:
+			return agv
+	return null
 
 func _on_pickup_area_entered(area: Area2D) -> void:
 	if current_state == State.MOVING_TO_ITEM:
 		if area == target_item:
 			_pick_up_item()
-		elif area.get_parent().is_in_group("enemy"): # If enemy detection area
+		elif area.get_parent().is_in_group("enemy"):
 			_latch_onto_enemy(area.get_parent())
 
 func _on_pickup_body_entered(body: Node2D) -> void:
@@ -88,7 +109,6 @@ func _latch_onto_enemy(enemy: Node2D):
 	if enemy.has_method("incapacitate"):
 		enemy.incapacitate()
 	
-	# Wait 5 seconds then release
 	await get_tree().create_timer(5.0).timeout
 	
 	if is_instance_valid(target_enemy) and target_enemy.has_method("reactivate"):
@@ -116,25 +136,21 @@ func move_towards_target(target_pos: Vector2, stop_distance: float) -> void:
 	update_animation_optimized()
 
 func _pick_up_item() -> void:
+	if not is_instance_valid(target_item): 
+		_reset_state()
+		return
+		
 	var item_type = target_item.get_item_type()
 	inventory_system.add_item(item_type)
 	target_item.queue_free() 
 	
-	# Auto-find a free AGV once item is held
-	var agvs = get_tree().get_nodes_in_group("agv")
-	for agv in agvs:
-		if not agv.is_reserved:
-			target_agv = agv
-			target_agv.is_reserved = true
-			current_state = State.MOVING_TO_AGV
-			return
-	
-	# If no AGV found, just wait
-	current_state = State.IDLE
+	# We already have target_agv reserved from set_target()
+	current_state = State.MOVING_TO_AGV
 
 func _load_onto_agv() -> void:
-	var held_type = inventory_system.take_item()
-	target_agv.add_to_storage(held_type) 
+	if is_instance_valid(target_agv):
+		var held_type = inventory_system.take_item()
+		target_agv.add_to_storage(held_type) 
 	_reset_state()
 
 func _drop_item_on_ground() -> void:
@@ -143,7 +159,8 @@ func _drop_item_on_ground() -> void:
 		ItemManager.spawn_item(type, global_position) 
 
 func _reset_state() -> void:
-	if is_instance_valid(target_agv): target_agv.is_reserved = false 
+	if is_instance_valid(target_agv): 
+		target_agv.is_reserved = false 
 	target_item = null
 	target_agv = null
 	target_enemy = null

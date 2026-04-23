@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@onready var ray = $InteractRay # This must be a ShapeCast2D in the editor
+@onready var ray = $InteractRay # Must be a ShapeCast2D in the editor
 @onready var sprite = $AnimatedSprite2D
 @onready var thought_system = $thought
 @onready var inventory = $Inventory
@@ -16,6 +16,8 @@ func _ready():
 	add_to_group("player_group")
 
 func _physics_process(_delta: float) -> void:
+	if is_busy: return
+	
 	var dir = Vector2(
 		Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
 		Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
@@ -34,45 +36,59 @@ func _process(_delta):
 	if is_busy: return
 	_update_closest_item()
 
-	var obj = null
+	# 1. GET RAYCAST COLLIDER (ShapeCast2D)
+	var ray_obj = null
 	if ray.get_collision_count() > 0:
-		obj = ray.get_collider(0)
+		ray_obj = ray.get_collider(0)
 
 	var new_target = null
 
-	# THE FIX: Priority 1 uses is_instance_valid to prevent holding dead items
-	if is_instance_valid(nearby_item):
+	# 2. SELECTION PRIORITY LOGIC
+	if is_instance_valid(ray_obj) and ray_obj.has_method("interact"):
+		new_target = ray_obj
+	elif is_instance_valid(ray_obj) and ray_obj.has_method("add_to_storage"):
+		new_target = ray_obj
+	elif is_instance_valid(nearby_item):
 		new_target = nearby_item
-	# Priority 2: AGV/Machines (ShapeCast)
-	elif is_instance_valid(obj) and obj.has_method("set_highlight"):
-		new_target = obj
 
+	# 3. HIGHLIGHT SYSTEM
 	if new_target != current_highlight:
-		# THE FIX: Ensure the old highlight target wasn't deleted before calling set_highlight
 		if is_instance_valid(current_highlight) and current_highlight.has_method("set_highlight"):
 			current_highlight.set_highlight(false)
 			
-		if is_instance_valid(new_target): 
+		if is_instance_valid(new_target) and new_target.has_method("set_highlight"): 
 			new_target.set_highlight(true)
 			
 		current_highlight = new_target
 
+	# 4. INTERACTION INPUT
 	if Input.is_action_just_pressed("interact"):
+		if is_instance_valid(ray_obj):
+			if ray_obj.has_method("interact"):
+				# KILL HIGHLIGHT IMMEDIATELY BEFORE INTERACTING
+				if ray_obj.has_method("set_highlight"):
+					ray_obj.set_highlight(false)
+				current_highlight = null
+				
+				ray_obj.interact(self)
+				return
+				
+			if ray_obj.has_method("add_to_storage"):
+				_handle_agv_interact(ray_obj)
+				return
+		
 		if is_instance_valid(nearby_item):
-			if inventory.has_item(): _handle_swap()
-			else: _handle_pickup()
+			if inventory.has_item(): 
+				_handle_swap()
+			else: 
+				_handle_pickup()
 			return
-			
-		if is_instance_valid(obj):
-			if obj.has_method("add_to_storage"):
-				_handle_agv_interact(obj)
-				return
-			if obj.has_method("interact"):
-				obj.interact(self)
-				return
 
 	if Input.is_action_just_pressed("drop_item"):
-		if inventory.has_item(): _handle_normal_drop()
+		if inventory.has_item(): 
+			_handle_normal_drop()
+
+# --- INTERACTION HANDLERS ---
 
 func _handle_agv_interact(agv_obj):
 	if inventory.has_item() and not agv_obj.has_item():
@@ -90,11 +106,26 @@ func _handle_pickup():
 	item_to_pickup.queue_free()
 	nearby_item = null
 
+func _handle_swap():
+	is_busy = true
+	var type = nearby_item.get_item_type()
+	items_in_range.erase(nearby_item)
+	nearby_item.queue_free()
+	nearby_item = null
+	await inventory.drop_and_spawn(global_position + last_dir * 35)
+	inventory.add_item(type)
+	is_busy = false
+
+func _handle_normal_drop():
+	is_busy = true
+	await inventory.drop_and_spawn(global_position + last_dir * 35)
+	is_busy = false
+
+# --- ITEM DETECTION SYSTEM ---
+
 func _update_closest_item():
-	# Scrape out any dead items deleted by the robots
 	items_in_range = items_in_range.filter(func(item): return is_instance_valid(item))
 	
-	# FAILSAFE: If nearby_item somehow holds a dead reference, force the UI to hide
 	if nearby_item and not is_instance_valid(nearby_item):
 		nearby_item = null
 		thought_system.hide_thought()
@@ -122,29 +153,52 @@ func _on_pickup_area_area_entered(area):
 func _on_pickup_area_area_exited(area):
 	if items_in_range.has(area): items_in_range.erase(area)
 
-func _handle_swap():
-	is_busy = true
-	var type = nearby_item.get_item_type()
-	items_in_range.erase(nearby_item)
-	nearby_item.queue_free()
-	nearby_item = null
-	await inventory.drop_and_spawn(global_position + last_dir * 35)
-	inventory.add_item(type)
-	is_busy = false
-
-func _handle_normal_drop():
-	is_busy = true
-	await inventory.drop_and_spawn(global_position + last_dir * 35)
-	is_busy = false
-
 func update_bubble_state():
 	if is_instance_valid(nearby_item): 
 		thought_system.update_thought(nearby_item.get_item_type(), inventory.has_item())
 
+# --- ANIMATION & ROBOT COMMANDS ---
+
 func update_animation(dir: Vector2):
 	if dir != Vector2.ZERO:
-		if abs(dir.x) > abs(dir.y): sprite.play("walk_east" if dir.x > 0 else "walk_west")
-		else: sprite.play("walk_south" if dir.y > 0 else "walk_north")
+		if abs(dir.x) > abs(dir.y): 
+			sprite.play("walk_east" if dir.x > 0 else "walk_west")
+		else: 
+			sprite.play("walk_south" if dir.y > 0 else "walk_north")
 	else:
-		if abs(last_dir.x) > abs(last_dir.y): sprite.play("idle_east" if last_dir.x > 0 else "idle_west")
-		else: sprite.play("idle_south" if last_dir.y > 0 else "idle_north")
+		if abs(last_dir.x) > abs(last_dir.y): 
+			sprite.play("idle_east" if last_dir.x > 0 else "idle_west")
+		else: 
+			sprite.play("idle_south" if last_dir.y > 0 else "idle_north")
+
+func _input(event):
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var clicked_target = _get_object_under_mouse()
+		if clicked_target:
+			_issue_command(clicked_target)
+
+func _get_object_under_mouse():
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsPointQueryParameters2D.new()
+	query.position = get_global_mouse_position()
+	query.collide_with_areas = true
+	var result = space_state.intersect_point(query)
+	
+	if result:
+		return result[0].collider
+	return null
+
+func _issue_command(target):
+	var arms = get_tree().get_nodes_in_group("robotic_arm")
+	var best_arm = null
+	var min_dist = INF
+	
+	for arm in arms:
+		if arm.current_state == arm.State.IDLE:
+			var d = arm.global_position.distance_to(target.global_position)
+			if d < min_dist:
+				min_dist = d
+				best_arm = arm
+				
+	if best_arm:
+		best_arm.set_target(target)

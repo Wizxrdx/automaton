@@ -9,3 +9,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+func _input(event):
+	if event.is_action_pressed("ui_cancel"): # This is the "Esc" key by default
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)

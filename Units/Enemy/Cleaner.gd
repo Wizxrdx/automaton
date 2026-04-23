@@ -7,7 +7,6 @@ extends CharacterBody2D
 enum State { PATROL, CLEANING, CHASE }
 var current_state = State.PATROL
 
-# You wanted Down as default, so we start here
 var current_direction := Vector2.DOWN 
 var active := true
 var cleaning_timer := 0.0
@@ -22,13 +21,16 @@ var is_approaching_wall := false
 
 func _ready():
 	add_to_group("enemy")
+	# Enable mouse detection
+	input_pickable = true
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
+	
 	if not detection_area.body_entered.is_connected(_on_vision_entered):
 		detection_area.body_entered.connect(_on_vision_entered)
 	
 	wall_sensor.enabled = true
 	wall_sensor.add_exception(self)
-	
-	# Force the light to match your 'Down' start
 	_sync_orientation(current_direction)
 
 func _physics_process(delta: float) -> void:
@@ -92,11 +94,8 @@ func _perform_chase(delta: float):
 	if players.size() > 0:
 		var player = players[0]
 		velocity = global_position.direction_to(player.global_position) * chase_speed
-		
-		# We use look_at but SUBTRACT 90 degrees because your sprite faces Down
 		detection_area.look_at(player.global_position)
 		detection_area.rotation_degrees -= 90 
-		
 		_update_sprite_animation(velocity)
 		if global_position.distance_to(player.global_position) > 400:
 			_return_to_patrol()
@@ -110,7 +109,6 @@ func _return_to_patrol():
 	_sync_orientation(current_direction)
 
 func _sync_orientation(dir: Vector2):
-	# Since your flashlight faces DOWN at 0 degrees:
 	if dir == Vector2.DOWN: detection_area.rotation_degrees = 0
 	elif dir == Vector2.UP: detection_area.rotation_degrees = 180
 	elif dir == Vector2.RIGHT: detection_area.rotation_degrees = -90
@@ -122,6 +120,16 @@ func _update_sprite_animation(dir: Vector2):
 		sprite.play("east" if dir.x > 0 else "west")
 	else:
 		sprite.play("south" if dir.y > 0 else "north")
+
+# --- MOUSE HIGHLIGHTING ---
+
+func _on_mouse_entered():
+	if active: # Only highlight if it's not already incapacitated
+		# Flashlight and body tint to show it can be clicked/targeted
+		sprite.modulate = Color(1.2, 1.2, 1.5) 
+
+func _on_mouse_exited():
+	sprite.modulate = Color(1, 1, 1)
 
 func _on_vision_entered(body: Node2D):
 	if not active or body == self: return 
@@ -138,7 +146,9 @@ func _trigger_chase():
 func incapacitate():
 	active = false
 	flashlight.visible = false
+	sprite.modulate = Color(0.3, 0.3, 0.3) # Darken when shut down
 
 func reactivate():
 	active = true
 	flashlight.visible = true
+	sprite.modulate = Color(1, 1, 1)
