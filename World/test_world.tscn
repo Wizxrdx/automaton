@@ -4,8 +4,11 @@
 [ext_resource type="PackedScene" uid="uid://cy5no6apgj8ds" path="res://Items/Types/tires.tscn" id="4_8h8jw"]
 [ext_resource type="PackedScene" uid="uid://0tr6kh6eyqq2" path="res://Player/player.tscn" id="4_ftki0"]
 [ext_resource type="PackedScene" uid="uid://j4ep4oiu8myj" path="res://Items/Types/battery.tscn" id="4_kgiip"]
-[ext_resource type="PackedScene" uid="uid://b8bqhuiabierl" path="res://Interactables/AGVMachine.tscn" id="4_w6qo1"]
+[ext_resource type="PackedScene" uid="uid://b8bqhuiabierl" path="res://Interactables/Base/AGVMachine.tscn" id="4_w6qo1"]
 [ext_resource type="PackedScene" uid="uid://lswo77r1fq6i" path="res://Items/Types/scrap.tscn" id="5_ioycy"]
+[ext_resource type="PackedScene" uid="uid://ctf1hce7y2wse" path="res://Interactables/Base/RoboticArmMachine.tscn" id="7_8h8jw"]
+[ext_resource type="PackedScene" uid="uid://ckgkf12sndwjd" path="res://Units/Friendly/RoboticArm/RoboticArm.tscn" id="8_ioycy"]
+[ext_resource type="PackedScene" uid="uid://bmvy7vir0tb5v" path="res://Units/Enemy/Cleaner.tscn" id="9_2xslp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ohxov"]
 size = Vector2(16, 2368)
@@ -24,9 +27,8 @@ y_sort_enabled = true
 script = ExtResource("1_il2xo")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=188095091]
-offset_left = 80.0
 offset_top = 8.0
-offset_right = 5776.0
+offset_right = 5696.0
 offset_bottom = 2376.0
 color = Color(0.48235294, 0.3254902, 0.19215687, 1)
 
@@ -47,7 +49,7 @@ position = Vector2(4544, 864)
 shape = SubResource("RectangleShape2D_il2xo")
 
 [node name="top" type="StaticBody2D" parent="." unique_id=670501580]
-position = Vector2(576, -8)
+position = Vector2(576, 0)
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="top" unique_id=500931097]
@@ -123,3 +125,15 @@ collision_mask = 1
 y_sort_enabled = false
 position = Vector2(720, 384)
 collision_mask = 1
+
+[node name="StaticBody2D" parent="." unique_id=896008313 instance=ExtResource("7_8h8jw")]
+position = Vector2(760, 512)
+
+[node name="StaticBody2D2" parent="." unique_id=666052275 instance=ExtResource("7_8h8jw")]
+position = Vector2(832, 512)
+
+[node name="RoboticArm" parent="." unique_id=2084668017 instance=ExtResource("8_ioycy")]
+position = Vector2(968, 520)
+
+[node name="Cleaner" parent="." unique_id=1580893242 instance=ExtResource("9_2xslp")]
+position = Vector2(856, 72)

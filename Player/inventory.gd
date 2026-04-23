@@ -3,12 +3,7 @@ extends Node2D
 @onready var item_sprite = $item
 var held_item = null
 
-var item_scenes = {
-	"battery": preload("res://Items/Types/battery.tscn"),
-	"scrap": preload("res://Items/Types/scrap.tscn"),
-	"tires": preload("res://Items/Types/tires.tscn")
-}
-
+# The inventory only needs to know what things LOOK like in the UI
 var item_textures = {
 	"battery": preload("res://Items/Types/battery.png"),
 	"scrap": preload("res://Items/Types/scrap.png"),
@@ -29,27 +24,30 @@ func consume_item():
 	held_item = null
 	_update_visuals()
 
-func drop_and_spawn(spawn_pos: Vector2):
-	if not held_item: return
-	var item_to_spawn = held_item
+func drop_and_spawn(spawn_pos: Vector2) -> Node2D:
+	if not held_item: 
+		return null
+	
+	# Tell the Global Manager to do the heavy lifting
+	var spawned_item = ItemManager.spawn_item(held_item, spawn_pos)
+	
+	if spawned_item:
+		# Temporarily disable pickup so the player doesn't instantly grab it again
+		spawned_item.set_deferred("monitoring", false)
+		_prevent_immediate_pickup(spawned_item)
+	
 	held_item = null
 	_update_visuals()
 	
-	var scene_to_instance = item_scenes.get(item_to_spawn)
-	if not scene_to_instance: return null
-	var new_item = scene_to_instance.instantiate()
-	new_item.global_position = spawn_pos
-	get_tree().current_scene.add_child(new_item)
-	
-	new_item.set_deferred("monitoring", false)
+	return spawned_item
+
+func _prevent_immediate_pickup(item_node: Node2D):
 	await get_tree().create_timer(0.2).timeout
-	if is_instance_valid(new_item):
-		new_item.set_deferred("monitoring", true)
-		return new_item
-	return null
+	if is_instance_valid(item_node):
+		item_node.set_deferred("monitoring", true)
 
 func _update_visuals():
-	if held_item and held_item in item_textures:
+	if held_item and item_textures.has(held_item):
 		item_sprite.texture = item_textures[held_item]
 		item_sprite.visible = true
 	else:

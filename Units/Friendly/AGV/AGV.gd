@@ -6,7 +6,6 @@ extends CharacterBody2D
 @export var separation_dist := 45.0
 @export var follow_distance := 60.0
 
-# This refers to the script below that you'll attach to a child node
 @onready var inventory_system = $Inventory 
 @onready var movement: AnimatedSprite2D = $movement
 
@@ -14,6 +13,9 @@ var player: Node2D
 var neighbors: Array = [] 
 var current_anim = ""
 var highlighted := false
+
+# NEW: Tracks if a Robotic Arm is currently on its way to load this AGV
+var is_reserved := false 
 
 func _ready():
 	RobotManager.register_robot(self)
@@ -53,12 +55,13 @@ func _calculate_separation() -> Vector2:
 			force += diff.normalized() * strength * speed
 	return force
 
-# --- INTERFACE FOR PLAYER ---
+# --- INTERFACE FOR PLAYER & ROBOTS ---
 func has_item() -> bool:
 	return inventory_system.has_item()
 
 func add_to_storage(item_type: String):
 	inventory_system.add_item(item_type)
+	is_reserved = false # Clear reservation once loaded
 
 func take_from_storage() -> String:
 	return inventory_system.take_item()

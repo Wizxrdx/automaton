@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://ctf1hce7y2wse"]
+
+[ext_resource type="PackedScene" uid="uid://if38ha7fwstg" path="res://Interactables/machine.tscn" id="1_m6vix"]
+[ext_resource type="PackedScene" uid="uid://ckgkf12sndwjd" path="res://Units/Friendly/RoboticArm/RoboticArm.tscn" id="2_g2fhc"]
+[ext_resource type="Texture2D" uid="uid://dwhbjgkchubm" path="res://Units/Friendly/RoboticArm/RoboticArm.png" id="3_optpb"]
+
+[node name="StaticBody2D" unique_id=896008313 instance=ExtResource("1_m6vix")]
+robot_scene = ExtResource("2_g2fhc")
+recipe = {
+"battery": 1,
+"scrap": 1,
+"tires": 2
+}
+
+[node name="CollisionShape2D" parent="." index="0" unique_id=1832198024]
+position = Vector2(0, -12)
+
+[node name="Sprite2D" parent="." index="1" unique_id=1807411384]
+texture = ExtResource("3_optpb")
+offset = Vector2(0, -32)
+hframes = 3
+vframes = 8

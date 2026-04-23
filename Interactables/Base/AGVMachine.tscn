@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b8bqhuiabierl"]
 
-[ext_resource type="PackedScene" uid="uid://if38ha7fwstg" path="res://Interactables/Base/machine.tscn" id="1_88o3o"]
+[ext_resource type="PackedScene" uid="uid://if38ha7fwstg" path="res://Interactables/machine.tscn" id="1_88o3o"]
 [ext_resource type="Texture2D" uid="uid://0uthgc2623rl" path="res://Units/Friendly/AGV/AGV.png" id="2_n5a7j"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n5a7j"]
@@ -19,5 +19,5 @@ shape = SubResource("RectangleShape2D_n5a7j")
 [node name="Sprite2D" parent="." index="1" unique_id=1807411384]
 position = Vector2(0, -32)
 texture = ExtResource("2_n5a7j")
-hframes = 2
+hframes = 3
 vframes = 8

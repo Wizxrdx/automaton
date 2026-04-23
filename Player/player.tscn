@@ -149,7 +149,7 @@ animations = [{
 [node name="Player" type="CharacterBody2D" unique_id=1401464434]
 y_sort_enabled = true
 collision_layer = 2
-collision_mask = 3
+collision_mask = 11
 script = ExtResource("1_4ntmi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1710762166]

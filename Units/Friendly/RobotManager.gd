@@ -14,7 +14,7 @@ func _physics_process(_delta):
 	var grid = {}
 	for bot in all_robots:
 		var cell = Vector2(
-			floor(bot.global_position.x / CELL_SIZE), 
+			floor(bot.global_position.x / CELL_SIZE),
 			floor(bot.global_position.y / CELL_SIZE)
 		)
 		if not grid.has(cell): grid[cell] = []

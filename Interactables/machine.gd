@@ -19,6 +19,9 @@ var current_inventory = {
 
 var is_complete = false
 
+func _ready():
+	add_to_group('machine')
+
 func interact(player_ref):
 	if is_complete:
 		revive_robot(player_ref)
