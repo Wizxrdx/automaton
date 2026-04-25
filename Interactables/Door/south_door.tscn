@@ -17,16 +17,53 @@ size = Vector2(64, 96)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yenfb"]
 size = Vector2(64, 96)
 
-[node name="HorizontalDoor" type="Area2D" unique_id=703891385]
-y_sort_enabled = true
-script = ExtResource("1_yenfb")
+[sub_resource type="AtlasTexture" id="AtlasTexture_hg6o5"]
+atlas = ExtResource("1_cpjwb")
+region = Rect2(0, 0, 128, 128)
 
-[node name="Door" type="Sprite2D" parent="." unique_id=15638293]
+[sub_resource type="AtlasTexture" id="AtlasTexture_svqo6"]
+atlas = ExtResource("1_cpjwb")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n1h7y"]
+atlas = ExtResource("1_cpjwb")
+region = Rect2(0, 256, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pa5od"]
+atlas = ExtResource("1_cpjwb")
+region = Rect2(0, 384, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0c7g1"]
+atlas = ExtResource("1_cpjwb")
+region = Rect2(0, 512, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yeu7r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hg6o5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_svqo6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n1h7y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pa5od")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0c7g1")
+}],
+"loop": true,
+"name": &"open",
+"speed": 5.0
+}]
+
+[node name="SouthDoor" type="Area2D" unique_id=703891385]
 y_sort_enabled = true
-texture = ExtResource("1_cpjwb")
-offset = Vector2(0, -48)
-hframes = 2
-vframes = 5
+collision_mask = 2
+script = ExtResource("1_yenfb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1319989626]
 y_sort_enabled = true
@@ -35,7 +72,7 @@ shape = SubResource("RectangleShape2D_127u2")
 
 [node name="Terminal" type="StaticBody2D" parent="." unique_id=1975231038]
 y_sort_enabled = true
-position = Vector2(-104, 56)
+position = Vector2(-104, 40)
 collision_mask = 3
 script = ExtResource("3_hg6o5")
 
@@ -43,7 +80,7 @@ script = ExtResource("3_hg6o5")
 y_sort_enabled = true
 texture = ExtResource("2_yenfb")
 offset = Vector2(0, -32)
-vframes = 2
+vframes = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Terminal" unique_id=1019952351]
 y_sort_enabled = true
@@ -65,3 +102,8 @@ y_sort_enabled = true
 y_sort_enabled = true
 position = Vector2(-32, -48)
 shape = SubResource("RectangleShape2D_yenfb")
+
+[node name="Door" type="AnimatedSprite2D" parent="." unique_id=842392095]
+sprite_frames = SubResource("SpriteFrames_yeu7r")
+animation = &"open"
+offset = Vector2(0, -48)

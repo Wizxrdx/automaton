@@ -1,9 +1,10 @@
 [gd_scene format=4 uid="uid://ba5vao3hb24wp"]
 
-[ext_resource type="Script" uid="uid://d1s2xbh8c22yr" path="res://World/test_world.gd" id="1_sbfeq"]
+[ext_resource type="Script" uid="uid://dv8sslbdd0ykf" path="res://World/level_1.gd" id="1_3hj1s"]
 [ext_resource type="Texture2D" uid="uid://b8ty44uy03pqf" path="res://World/Assets/factory.png" id="2_sbfeq"]
 [ext_resource type="PackedScene" uid="uid://0tr6kh6eyqq2" path="res://Player/player.tscn" id="3_7n1ni"]
-[ext_resource type="PackedScene" uid="uid://dnop8su1clcoc" path="res://Interactables/Door/vertical_door.tscn" id="4_3hj1s"]
+[ext_resource type="PackedScene" uid="uid://dnop8su1clcoc" path="res://Interactables/Door/west_door.tscn" id="4_3hj1s"]
+[ext_resource type="PackedScene" uid="uid://bmvy7vir0tb5v" path="res://Units/Enemy/Cleaner.tscn" id="5_k8plc"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_k1wae"]
 vertices = PackedVector2Array(822, 202, 886, 202, 886, 310, 822, 310, 822, 438, 74, 438, 74, 74, 822, 74)
@@ -144,7 +145,8 @@ sources/0 = SubResource("TileSetAtlasSource_3hj1s")
 
 [node name="Level1" type="Node2D" unique_id=453771296]
 y_sort_enabled = true
-script = ExtResource("1_sbfeq")
+script = ExtResource("1_3hj1s")
+is_menu_background = true
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=1491352513]
 position = Vector2(320, 128)
@@ -157,7 +159,12 @@ tile_map_data = PackedByteArray("AAADAAEAAAAAAAAAAAADAAIAAAAAAAAAAAACAAIAAAAAAAA
 tile_set = SubResource("TileSet_sbfeq")
 
 [node name="Player" parent="." unique_id=1401464434 instance=ExtResource("3_7n1ni")]
-position = Vector2(240, 800)
+position = Vector2(328, 1080)
 
-[node name="VerticalDoor" parent="." unique_id=801201742 instance=ExtResource("4_3hj1s")]
-position = Vector2(880, 320)
+[node name="WestDoor" parent="." unique_id=801201742 instance=ExtResource("4_3hj1s")]
+position = Vector2(896, 320)
+should_teleport = true
+
+[node name="Cleaner" parent="." unique_id=2084668017 instance=ExtResource("5_k8plc")]
+position = Vector2(344, 176)
+detection = false

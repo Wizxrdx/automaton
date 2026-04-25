@@ -148,7 +148,7 @@ scale = Vector2(6.3184314, 1)
 polygon = PackedVector2Array(-20.258192, 192, 20.258192, 192, 1.266137, -40, 0, -40, -1.266137, -40)
 
 [node name="WallSensor" type="RayCast2D" parent="." unique_id=1596926423]
-target_position = Vector2(0, 592)
+target_position = Vector2(0, 32)
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

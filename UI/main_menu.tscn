@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://c6ujh0esp3bbs"]
 
 [ext_resource type="Script" uid="uid://dkfvx8tcx8hdk" path="res://UI/main_menu.gd" id="1_p8ccj"]
+[ext_resource type="PackedScene" uid="uid://ba5vao3hb24wp" path="res://World/Level1.tscn" id="2_tk8dj"]
+[ext_resource type="Texture2D" uid="uid://cohktqv675ns7" path="res://UI/logo.png" id="3_d8nwk"]
 
 [node name="MainMenu" type="Control" unique_id=1362057842]
 layout_mode = 3
@@ -11,6 +13,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_p8ccj")
 
+[node name="LevelInstance" parent="." unique_id=453771296 instance=ExtResource("2_tk8dj")]
+
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=764718242]
 layout_mode = 1
 anchors_preset = 8
@@ -18,12 +22,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = 264.0
+offset_top = 134.0
+offset_right = 310.0
+offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer" unique_id=231407993]
+layout_mode = 2
+texture = ExtResource("3_d8nwk")
 
 [node name="Button" type="Button" parent="VBoxContainer" unique_id=1876818327]
 layout_mode = 2
@@ -32,6 +40,21 @@ text = "Start"
 [node name="Button2" type="Button" parent="VBoxContainer" unique_id=1186391872]
 layout_mode = 2
 text = "Quit"
+
+[node name="FadeOverlay" type="ColorRect" parent="." unique_id=788989379]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 137.0
+offset_top = 125.0
+offset_right = 183.0
+offset_bottom = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1135988002]
+position = Vector2(448, 256)
+zoom = Vector2(0.4, 0.4)
 
 [connection signal="button_up" from="VBoxContainer/Button" to="." method="_on_start_button_pressed"]
 [connection signal="button_up" from="VBoxContainer/Button2" to="." method="_on_quit_button_pressed"]

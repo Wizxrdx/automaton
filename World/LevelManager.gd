@@ -10,4 +10,4 @@ func load_next_level():
 		get_tree().change_scene_to_file("res://World/Level2.tscn")
 	else:
 		# Load the "Generator" scene
-		get_tree().change_scene_to_file("res://levels/GeneratedLevel.tscn")
+		get_tree().change_scene_to_file("res://World/GeneratedLevel.tscn")
