@@ -61,6 +61,10 @@ func set_highlight(state: bool):
 	
 	sprite.modulate = Color(1.5, 1.5, 1.5) if state else Color(1, 1, 1)
 
+# Inside door.gd
 func _on_body_entered(body):
 	if is_open and should_teleport and body.is_in_group("player_group"):
+		print("Attempting teleport...")
+		# Use the engine's 'Engine.has_singleton' check if you're paranoid
+		# But usually, just calling the name works IF there is no local node named the same thing.
 		LevelManager.load_next_level()

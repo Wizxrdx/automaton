@@ -157,7 +157,8 @@ position = Vector2(0, -5)
 shape = SubResource("RectangleShape2D_hvfyp")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1390136374]
-zoom = Vector2(0.4, 0.4)
+enabled = false
+zoom = Vector2(0.345, 0.345)
 
 [node name="InteractRay" type="ShapeCast2D" parent="." unique_id=1802014474]
 shape = SubResource("RectangleShape2D_od3ui")

@@ -168,3 +168,7 @@ should_teleport = true
 [node name="Cleaner" parent="." unique_id=2084668017 instance=ExtResource("5_k8plc")]
 position = Vector2(344, 176)
 detection = false
+
+[node name="StaticLevelCamera" type="Camera2D" parent="." unique_id=810040564]
+position = Vector2(448, 256)
+zoom = Vector2(0.345, 0.345)

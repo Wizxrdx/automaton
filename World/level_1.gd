@@ -24,25 +24,32 @@ func start_level_normally():
 	player.global_position = spawn.global_position
 	player.set_physics_process(true)
 	player.set_process_input(true)
-	if cleaner:
-		cleaner.hide() # Hide the NPC because the player is now here
+
+func _input(event):
+	if event.is_action_pressed("ui_cancel"): # This is the "Esc" key by default
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func start_as_player():
-	# 1. Position the player where the cleaner was
+	# 1. Position and Swap
 	player.global_position = cleaner.global_position
 	
-	# 2. Character swap
-	cleaner.hide()
+	# THE CLEAN KILL: Delete the cleaner so its logic stops forever
+	cleaner.queue_free()
+	
 	player.show()
+	# Stop any inherited momentum
+	player.velocity = Vector2.ZERO
+
+	var static_cam = get_node_or_null("StaticLevelCamera")
+	if static_cam:
+		# Wait for the Menu/Cleaner to be fully cleared from the tree
+		await get_tree().process_frame 
+		static_cam.make_current()
+		print("Camera Status: Static Level Camera is now the Boss.")
 	
-	# 3. ENABLE PLAYER CAMERA
-	# This tells Godot to stop using the Menu Camera and start using the Player's
-	var player_camera = player.get_node_or_null("Camera2D")
-	if player_camera:
-		player_camera.make_current() 
-	
-	# 4. Enable controls
+	# 3. Enable controls
 	player.set_physics_process(true)
 	player.set_process_input(true)
 	
-	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)	
+	# Optional: If you want it invisible too, use:
+	# Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)

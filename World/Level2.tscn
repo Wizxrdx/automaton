@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://c62tj0u02mf5w"]
 
-[ext_resource type="Script" uid="uid://d1s2xbh8c22yr" path="res://World/test_world.gd" id="1_yjni2"]
+[ext_resource type="Script" uid="uid://dnj3x1n55mlhm" path="res://World/level_2.gd" id="1_u0hd0"]
 [ext_resource type="Texture2D" uid="uid://b8ty44uy03pqf" path="res://World/Assets/factory.png" id="2_0xtwl"]
 [ext_resource type="PackedScene" uid="uid://0tr6kh6eyqq2" path="res://Player/player.tscn" id="3_u0hd0"]
 [ext_resource type="PackedScene" uid="uid://dljoodh54h7l" path="res://Interactables/Door/east_door.tscn" id="5_t570r"]
@@ -143,9 +143,9 @@ physics_layer_0/collision_layer = 1
 navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_3hj1s")
 
-[node name="Level1" type="Node2D" unique_id=453771296]
+[node name="Level2" type="Node2D" unique_id=453771296]
 y_sort_enabled = true
-script = ExtResource("1_yjni2")
+script = ExtResource("1_u0hd0")
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=1491352513]
 position = Vector2(64, 256)
@@ -167,3 +167,7 @@ should_teleport = true
 [node name="VerticalDoor" parent="." unique_id=1998518730 instance=ExtResource("5_t570r")]
 position = Vector2(0, 320)
 current_state = 2
+
+[node name="StaticLevelCamera" type="Camera2D" parent="." unique_id=667407825]
+position = Vector2(448, 256)
+zoom = Vector2(0.345, 0.345)

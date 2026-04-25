@@ -123,6 +123,13 @@ func _handle_normal_drop():
 
 # --- ITEM DETECTION SYSTEM ---
 
+func activate_camera(follow_player: bool):
+	if follow_player:
+		$Camera2D.enabled = true
+		$Camera2D.make_current()
+	else:
+		$Camera2D.enabled = false
+
 func _update_closest_item():
 	items_in_range = items_in_range.filter(func(item): return is_instance_valid(item))
 	

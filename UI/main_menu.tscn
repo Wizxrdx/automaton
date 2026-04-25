@@ -4,6 +4,48 @@
 [ext_resource type="PackedScene" uid="uid://ba5vao3hb24wp" path="res://World/Level1.tscn" id="2_tk8dj"]
 [ext_resource type="Texture2D" uid="uid://cohktqv675ns7" path="res://UI/logo.png" id="3_d8nwk"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_d8nwk"]
+atlas = ExtResource("3_d8nwk")
+region = Rect2(0, 0, 448, 160)
+
+[sub_resource type="Animation" id="Animation_d8nwk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture:region")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(0, 0, 448, 160)]
+}
+
+[sub_resource type="Animation" id="Animation_4cwpn"]
+resource_name = "play_ui"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture:region")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [Rect2(0, 0, 448, 160), Rect2(0, 160, 448, 160), Rect2(0, 320, 448, 160), Rect2(0, 160, 448, 160), Rect2(0, 0, 448, 160)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_f40uw"]
+_data = {
+&"RESET": SubResource("Animation_d8nwk"),
+&"play_ui": SubResource("Animation_4cwpn")
+}
+
 [node name="MainMenu" type="Control" unique_id=1362057842]
 layout_mode = 3
 anchors_preset = 15
@@ -22,16 +64,20 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 264.0
-offset_top = 134.0
-offset_right = 310.0
-offset_bottom = 200.0
+offset_left = 63.0
+offset_top = -12.0
+offset_right = 511.0
+offset_bottom = 218.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer" unique_id=231407993]
 layout_mode = 2
-texture = ExtResource("3_d8nwk")
+texture = SubResource("AtlasTexture_d8nwk")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="VBoxContainer/TextureRect" unique_id=2127134869]
+libraries/ = SubResource("AnimationLibrary_f40uw")
+autoplay = &"play_ui"
 
 [node name="Button" type="Button" parent="VBoxContainer" unique_id=1876818327]
 layout_mode = 2
@@ -52,9 +98,9 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1135988002]
+[node name="StaticLevelCamera" type="Camera2D" parent="." unique_id=1135988002]
 position = Vector2(448, 256)
-zoom = Vector2(0.4, 0.4)
+zoom = Vector2(0.345, 0.345)
 
 [connection signal="button_up" from="VBoxContainer/Button" to="." method="_on_start_button_pressed"]
 [connection signal="button_up" from="VBoxContainer/Button2" to="." method="_on_quit_button_pressed"]
