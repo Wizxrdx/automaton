@@ -5,6 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://0tr6kh6eyqq2" path="res://Player/player.tscn" id="3_7n1ni"]
 [ext_resource type="PackedScene" uid="uid://dnop8su1clcoc" path="res://Interactables/Door/west_door.tscn" id="4_3hj1s"]
 [ext_resource type="PackedScene" uid="uid://bmvy7vir0tb5v" path="res://Units/Enemy/Cleaner.tscn" id="5_k8plc"]
+[ext_resource type="PackedScene" uid="uid://b8bqhuiabierl" path="res://Interactables/Machine/AGVMachine.tscn" id="6_s7v0q"]
+[ext_resource type="PackedScene" uid="uid://j4ep4oiu8myj" path="res://Items/Types/battery.tscn" id="7_o2stx"]
+[ext_resource type="FontFile" uid="uid://m5fmm1kyaf2y" path="res://UI/Pix32.ttf" id="8_jww7o"]
+[ext_resource type="PackedScene" uid="uid://lswo77r1fq6i" path="res://Items/Types/scrap.tscn" id="8_s7v0q"]
+[ext_resource type="PackedScene" uid="uid://cy5no6apgj8ds" path="res://Items/Types/tires.tscn" id="9_o2stx"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_k1wae"]
 vertices = PackedVector2Array(822, 202, 886, 202, 886, 310, 822, 310, 822, 438, 74, 438, 74, 74, 822, 74)
@@ -143,6 +148,10 @@ physics_layer_0/collision_layer = 1
 navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_3hj1s")
 
+[sub_resource type="LabelSettings" id="LabelSettings_o2stx"]
+font = ExtResource("8_jww7o")
+font_size = 12
+
 [node name="Level1" type="Node2D" unique_id=453771296]
 y_sort_enabled = true
 script = ExtResource("1_3hj1s")
@@ -161,10 +170,6 @@ tile_set = SubResource("TileSet_sbfeq")
 [node name="Player" parent="." unique_id=1401464434 instance=ExtResource("3_7n1ni")]
 position = Vector2(328, 1080)
 
-[node name="WestDoor" parent="." unique_id=801201742 instance=ExtResource("4_3hj1s")]
-position = Vector2(896, 320)
-should_teleport = true
-
 [node name="Cleaner" parent="." unique_id=2084668017 instance=ExtResource("5_k8plc")]
 position = Vector2(344, 176)
 detection = false
@@ -172,3 +177,99 @@ detection = false
 [node name="StaticLevelCamera" type="Camera2D" parent="." unique_id=810040564]
 position = Vector2(448, 256)
 zoom = Vector2(0.345, 0.345)
+
+[node name="WestDoor" parent="." unique_id=801201742 instance=ExtResource("4_3hj1s")]
+position = Vector2(896, 320)
+should_teleport = true
+
+[node name="AGVMachine" parent="." unique_id=202833616 instance=ExtResource("6_s7v0q")]
+visible = false
+position = Vector2(480, 336)
+
+[node name="Battery" parent="." unique_id=1795187254 instance=ExtResource("7_o2stx")]
+visible = false
+position = Vector2(344, 320)
+
+[node name="Label" type="Label" parent="." unique_id=261704514]
+visible = false
+offset_left = 80.0
+offset_top = 232.0
+offset_right = 221.0
+offset_bottom = 281.0
+text = "Press E or Space
+ to Interact
+
+and Q to held 
+drop item"
+label_settings = SubResource("LabelSettings_o2stx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="." unique_id=710513124]
+visible = false
+offset_left = 248.0
+offset_top = 232.0
+offset_right = 389.0
+offset_bottom = 281.0
+text = "You can pick
+up these items"
+label_settings = SubResource("LabelSettings_o2stx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="." unique_id=1498434349]
+visible = false
+offset_left = 408.0
+offset_top = 232.0
+offset_right = 555.0
+offset_bottom = 281.0
+text = "And put them into
+this robot for repair"
+label_settings = SubResource("LabelSettings_o2stx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label4" type="Label" parent="." unique_id=298266417]
+visible = false
+offset_left = 376.0
+offset_top = 336.0
+offset_right = 574.0
+offset_bottom = 385.0
+text = "Once items are complete 
+Interact again to repair it"
+label_settings = SubResource("LabelSettings_o2stx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label5" type="Label" parent="." unique_id=1691133346]
+visible = false
+offset_left = 584.0
+offset_top = 216.0
+offset_right = 818.0
+offset_bottom = 291.0
+text = "You can also interact with
+the robot while holding
+an item to let it carry it"
+label_settings = SubResource("LabelSettings_o2stx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label6" type="Label" parent="." unique_id=1990768028]
+visible = false
+offset_left = 600.0
+offset_top = 80.0
+offset_right = 834.0
+offset_bottom = 155.0
+text = "Interact with the terminal
+to open the door"
+label_settings = SubResource("LabelSettings_o2stx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Scrap" parent="." unique_id=437792099 instance=ExtResource("8_s7v0q")]
+visible = false
+position = Vector2(288, 328)
+
+[node name="Tires" parent="." unique_id=518783124 instance=ExtResource("9_o2stx")]
+visible = false
+position = Vector2(696, 336)

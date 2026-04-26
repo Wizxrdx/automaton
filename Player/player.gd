@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var sprite = $AnimatedSprite2D
 @onready var thought_system = $thought
 @onready var inventory = $Inventory
+@onready var move_sfx = $walk
 
 const SPEED = 200.0
 var last_dir = Vector2.DOWN
@@ -18,6 +19,14 @@ func _ready():
 func _physics_process(_delta: float) -> void:
 	if is_busy: return
 	
+	if velocity.length() > 10:
+		if not move_sfx.playing:
+			move_sfx.play()
+		# OPTIONAL: Change pitch based on speed for "juice"
+		move_sfx.pitch_scale = lerp(move_sfx.pitch_scale, 0.8 + (velocity.length() / 200.0), 0.1)
+	else:
+		move_sfx.stop()
+	
 	var dir = Vector2(
 		Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
 		Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
@@ -25,7 +34,6 @@ func _physics_process(_delta: float) -> void:
 	
 	if dir != Vector2.ZERO:
 		last_dir = dir
-		# Adjust the sweep direction of the ShapeCast
 		ray.target_position = last_dir * 60 
 
 	velocity = dir * SPEED
@@ -36,18 +44,24 @@ func _process(_delta):
 	if is_busy: return
 	_update_closest_item()
 
-	# 1. GET RAYCAST COLLIDER (ShapeCast2D)
 	var ray_obj = null
 	if ray.get_collision_count() > 0:
 		ray_obj = ray.get_collider(0)
 
 	var new_target = null
 
-	# 2. SELECTION PRIORITY LOGIC
+	# --- UPDATED SELECTION PRIORITY LOGIC ---
 	if is_instance_valid(ray_obj) and ray_obj.has_method("interact"):
 		new_target = ray_obj
+		
 	elif is_instance_valid(ray_obj) and ray_obj.has_method("add_to_storage"):
-		new_target = ray_obj
+		# ONLY highlight the AGV if interaction is actually possible
+		var player_has_item = inventory.has_item()
+		var agv_has_item = ray_obj.has_item() # Assumes AGV.gd has this method
+		
+		if player_has_item or agv_has_item:
+			new_target = ray_obj
+			
 	elif is_instance_valid(nearby_item):
 		new_target = nearby_item
 
@@ -65,16 +79,16 @@ func _process(_delta):
 	if Input.is_action_just_pressed("interact"):
 		if is_instance_valid(ray_obj):
 			if ray_obj.has_method("interact"):
-				# KILL HIGHLIGHT IMMEDIATELY BEFORE INTERACTING
 				if ray_obj.has_method("set_highlight"):
 					ray_obj.set_highlight(false)
 				current_highlight = null
-				
 				ray_obj.interact(self)
 				return
 				
 			if ray_obj.has_method("add_to_storage"):
-				_handle_agv_interact(ray_obj)
+				# Only trigger the handler if a transfer is possible
+				if inventory.has_item() or ray_obj.has_item():
+					_handle_agv_interact(ray_obj)
 				return
 		
 		if is_instance_valid(nearby_item):
@@ -97,6 +111,12 @@ func _handle_agv_interact(agv_obj):
 	elif not inventory.has_item() and agv_obj.has_item():
 		var item = agv_obj.take_from_storage()
 		inventory.add_item(item)
+	
+	# After interacting, check if we should kill the highlight (e.g. if both are now empty)
+	if not inventory.has_item() and not agv_obj.has_item():
+		if agv_obj.has_method("set_highlight"):
+			agv_obj.set_highlight(false)
+		current_highlight = null
 
 func _handle_pickup():
 	var item_to_pickup = nearby_item
@@ -190,7 +210,6 @@ func _get_object_under_mouse():
 	query.position = get_global_mouse_position()
 	query.collide_with_areas = true
 	var result = space_state.intersect_point(query)
-	
 	if result:
 		return result[0].collider
 	return null
@@ -199,13 +218,11 @@ func _issue_command(target):
 	var arms = get_tree().get_nodes_in_group("robotic_arm")
 	var best_arm = null
 	var min_dist = INF
-	
 	for arm in arms:
 		if arm.current_state == arm.State.IDLE:
 			var d = arm.global_position.distance_to(target.global_position)
 			if d < min_dist:
 				min_dist = d
 				best_arm = arm
-				
 	if best_arm:
 		best_arm.set_target(target)

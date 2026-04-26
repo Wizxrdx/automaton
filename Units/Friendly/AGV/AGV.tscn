@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://0uthgc2623rl" path="res://Units/Friendly/AGV/AGV.png" id="2_q7fqw"]
 [ext_resource type="Script" uid="uid://bxjtqq6rwsfik" path="res://Units/Friendly/AGV/AGVInventory.gd" id="3_qr1sw"]
 [ext_resource type="Texture2D" uid="uid://bler6g6hgne8l" path="res://Items/Types/tires.png" id="4_r5fr1"]
+[ext_resource type="AudioStream" uid="uid://bdwjrkj2hl5rv" path="res://Units/Friendly/robot_drive.wav" id="5_r1q7p"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nwrc7"]
 atlas = ExtResource("2_q7fqw")
@@ -240,3 +241,7 @@ script = ExtResource("3_qr1sw")
 [node name="item" type="Sprite2D" parent="Inventory" unique_id=1744447248]
 texture = ExtResource("4_r5fr1")
 offset = Vector2(0, -32)
+
+[node name="walk" type="AudioStreamPlayer2D" parent="." unique_id=1922972422]
+stream = ExtResource("5_r1q7p")
+volume_db = -10.0

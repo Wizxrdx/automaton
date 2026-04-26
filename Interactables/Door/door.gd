@@ -22,31 +22,29 @@ func _ready():
 		terminal.get_node("Sprite2D").modulate = Color(1, 0.5, 0.5)
 
 func interact(player_ref):
-	# Check state BEFORE doing anything
-	if current_state != TerminalState.READY:
-		print("Terminal is locked or disabled.")
+	if current_state != TerminalState.READY or is_open:
 		return
 		
-	if is_open: return
 	is_open = true
-
-	# Force terminal to normal color
 	terminal.get_node("Sprite2D").modulate = Color(1, 1, 1)
+
+	# 1. Create the smooth animation for EVERYONE
+	var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	
-	if should_teleport:
-		anim_sprite.frame = 5
-		if has_node("LeftDoor"): $LeftDoor.position.x -= slide_distance
-		if has_node("RightDoor"): $RightDoor.position.x += slide_distance
-		if has_node("TopDoor"): $TopDoor.position.y -= slide_distance
-		if has_node("DownDoor"): $DownDoor.position.y += slide_distance
-	else:
-		var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
-		tween.tween_property(anim_sprite, "frame", 5, open_speed)
-		
-		if has_node("LeftDoor"): tween.tween_property($LeftDoor, "position:x", $LeftDoor.position.x - slide_distance, open_speed)
-		if has_node("RightDoor"): tween.tween_property($RightDoor, "position:x", $RightDoor.position.x + slide_distance, open_speed)
-		if has_node("TopDoor"): tween.tween_property($TopDoor, "position:y", $TopDoor.position.y - slide_distance, open_speed)
-		if has_node("DownDoor"): tween.tween_property($DownDoor, "position:y", $DownDoor.position.y + slide_distance, open_speed)
+	# Animate the sprite frames
+	tween.tween_property(anim_sprite, "frame", 5, open_speed)
+	
+	# Animate the sliding physical parts (if they exist)
+	if has_node("LeftDoor"): 
+		tween.tween_property($LeftDoor, "position:x", $LeftDoor.position.x - slide_distance, open_speed)
+	if has_node("RightDoor"): 
+		tween.tween_property($RightDoor, "position:x", $RightDoor.position.x + slide_distance, open_speed)
+	if has_node("TopDoor"): 
+		tween.tween_property($TopDoor, "position:y", $TopDoor.position.y - slide_distance, open_speed)
+	if has_node("DownDoor"): 
+		tween.tween_property($DownDoor, "position:y", $DownDoor.position.y + slide_distance, open_speed)
+
+	$AudioStreamPlayer2D.play()
 
 func set_highlight(state: bool):
 	# The terminal script calls this; we gate it based on Door's state

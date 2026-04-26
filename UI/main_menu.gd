@@ -17,25 +17,32 @@ func _ready():
 	level.position = Vector2.ZERO
 
 func _on_start_button_pressed():
+	# 1. Immediate UI Feedback
 	$VBoxContainer.visible = false
-
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 	
-	await get_tree().create_timer(1.0).timeout
-	
-	# REPARENT
+	# 2. Start the "Pre-load" beat
+	# We use this time to do the heavy 'Reparent' logic BEFORE the player sees it
 	var root = get_tree().root
 	var old_pos = level.global_position 
 	remove_child(level)
 	root.add_child(level)
 	level.global_position = old_pos 
+	
+	# 3. Dramatic Pause 
+	# This gives the browser 1 second to settle the new scene tree
+	await get_tree().create_timer(1.0).timeout 
 
+	# 4. The Switch
+	# We've already moved the level, now we just turn on the "Game" part
 	level.start_as_player()
 	
-	# Wait one frame so Godot can register the new camera
+	# 5. THE HTML5 FIX: Wait TWO frames
+	# Frame 1: Godot registers the new StaticLevelCamera
+	# Frame 2: The GPU clears the old Main Menu textures
+	await get_tree().process_frame
 	await get_tree().process_frame
 	
-	# Now it is safe to kill the menu (and its camera)
 	self.queue_free()
 
 func _on_quit_button_pressed():

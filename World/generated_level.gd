@@ -6,6 +6,8 @@ extends Node2D
 func _ready():
 	# 1. Move player to spawn
 	player.global_position = spawn.global_position
+	LevelManager.apply_player_data(player)
+	RobotManager.spawn_saved_robots(self, player.global_position)
 	
 	# 2. FORCE PLAYER CAMERA
 	# This overrides the stationary cameras from Level 1 & 2

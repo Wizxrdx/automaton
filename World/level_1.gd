@@ -32,24 +32,49 @@ func _input(event):
 func start_as_player():
 	# 1. Position and Swap
 	player.global_position = cleaner.global_position
-	
-	# THE CLEAN KILL: Delete the cleaner so its logic stops forever
 	cleaner.queue_free()
 	
+	# Keep the ITEMS visible immediately
+	$AGVMachine.visible = true
+	$Battery.visible = true
+	$Scrap.visible = true
+	$Tires.visible = true
+	
+	# HIDE THE LABELS (Assuming they are named like this)
+	$Label.modulate.a = 0
+	$Label2.modulate.a = 0
+	$Label3.modulate.a = 0
+	$Label4.modulate.a = 0
+	$Label5.modulate.a = 0
+	$Label6.modulate.a = 0
+	
+	$Label.visible = true
+	$Label2.visible = true
+	$Label3.visible = true
+	$Label4.visible = true
+	$Label5.visible = true
+	$Label6.visible = true
+	
 	player.show()
-	# Stop any inherited momentum
 	player.velocity = Vector2.ZERO
 
 	var static_cam = get_node_or_null("StaticLevelCamera")
 	if static_cam:
-		# Wait for the Menu/Cleaner to be fully cleared from the tree
 		await get_tree().process_frame 
 		static_cam.make_current()
-		print("Camera Status: Static Level Camera is now the Boss.")
 	
-	# 3. Enable controls
 	player.set_physics_process(true)
 	player.set_process_input(true)
+
+	# 2. TRIGGER THE TEXT SEQUENCE
+	show_tutorial_labels()
+
+func show_tutorial_labels():
+	# Put your label nodes in this list
+	var labels = [$Label, $Label2, $Label3, $Label4, $Label5, $Label6]
 	
-	# Optional: If you want it invisible too, use:
-	# Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED_HIDDEN)
+	for l in labels:
+		if l:
+			var tween = create_tween()
+			tween.tween_property(l, "modulate:a", 1.0, 0.5) # Smooth fade
+			await get_tree().create_timer(3.0).timeout # 1 second gap

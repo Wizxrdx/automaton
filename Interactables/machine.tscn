@@ -1,11 +1,18 @@
 [gd_scene format=3 uid="uid://if38ha7fwstg"]
 
 [ext_resource type="Script" uid="uid://d1qpm2qftegdt" path="res://Interactables/machine.gd" id="1_y4gdb"]
+[ext_resource type="FontFile" uid="uid://m5fmm1kyaf2y" path="res://UI/Pix32.ttf" id="2_cvkae"]
+[ext_resource type="AudioStream" uid="uid://cyafi0hl5w1ue" path="res://Interactables/Machine/put_item.wav" id="3_pnr1i"]
+[ext_resource type="AudioStream" uid="uid://dmlqk6fm50aet" path="res://Interactables/Machine/machine_revive.wav" id="4_jldv1"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1fi8e"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvkae"]
 size = Vector2(48, 48)
+
+[sub_resource type="LabelSettings" id="LabelSettings_p48ii"]
+font = ExtResource("2_cvkae")
+font_size = 12
 
 [node name="StaticBody2D" type="StaticBody2D" unique_id=896008313]
 physics_material_override = SubResource("PhysicsMaterial_1fi8e")
@@ -15,3 +22,17 @@ script = ExtResource("1_y4gdb")
 shape = SubResource("RectangleShape2D_cvkae")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1807411384]
+
+[node name="RecipeLabel" type="Label" parent="." unique_id=1169214278]
+top_level = true
+offset_right = 40.0
+offset_bottom = 23.0
+label_settings = SubResource("LabelSettings_p48ii")
+
+[node name="put_item" type="AudioStreamPlayer2D" parent="." unique_id=1785877683]
+stream = ExtResource("3_pnr1i")
+volume_db = -6.0
+
+[node name="machine_revive" type="AudioStreamPlayer2D" parent="." unique_id=951230371]
+stream = ExtResource("4_jldv1")
+volume_db = -6.0

@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://ckgkf12sndwjd" path="res://Units/Friendly/RoboticArm/RoboticArm.tscn" id="2_g2fhc"]
 [ext_resource type="Texture2D" uid="uid://dwhbjgkchubm" path="res://Units/Friendly/RoboticArm/RoboticArm.png" id="3_optpb"]
 
-[node name="StaticBody2D" unique_id=896008313 instance=ExtResource("1_m6vix")]
+[node name="RoboticArm" unique_id=896008313 instance=ExtResource("1_m6vix")]
 robot_scene = ExtResource("2_g2fhc")
 recipe = {
 "battery": 1,

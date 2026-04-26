@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c5cdyb5hefbk" path="res://Units/Enemy/Cleaner.gd" id="1_bic4p"]
 [ext_resource type="Texture2D" uid="uid://chk0ed8jl8ow5" path="res://Units/Enemy/cleaner_animation.png" id="2_6gyt8"]
 [ext_resource type="Texture2D" uid="uid://36hbfbr2gmom" path="res://Units/Enemy/cone.png" id="3_nnufb"]
+[ext_resource type="AudioStream" uid="uid://1ovmpgo22170" path="res://Units/Enemy/robot_step.wav" id="4_6gyt8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8svxl"]
 size = Vector2(32, 16)
@@ -114,11 +115,12 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nnufb"]
+size = Vector2(32, 64)
+
 [node name="Cleaner" type="CharacterBody2D" unique_id=2084668017]
 y_sort_enabled = true
 collision_layer = 8
-collision_mask = 5
-input_pickable = true
 script = ExtResource("1_bic4p")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1729584105]
@@ -149,6 +151,16 @@ polygon = PackedVector2Array(-20.258192, 192, 20.258192, 192, 1.266137, -40, 0, 
 
 [node name="WallSensor" type="RayCast2D" parent="." unique_id=1596926423]
 target_position = Vector2(0, 32)
+
+[node name="InteractionArea" type="Area2D" parent="." unique_id=398523592]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=378909070]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_nnufb")
+
+[node name="walk" type="AudioStreamPlayer2D" parent="." unique_id=1869271836]
+stream = ExtResource("4_6gyt8")
+volume_db = 0.6
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

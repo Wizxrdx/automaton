@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dwhbjgkchubm" path="res://Units/Friendly/RoboticArm/RoboticArm.png" id="2_vbj0v"]
 [ext_resource type="Script" uid="uid://du2fn0kt68em0" path="res://Units/Friendly/RoboticArm/RoboticArmInventory.gd" id="3_eai3t"]
 [ext_resource type="Texture2D" uid="uid://bler6g6hgne8l" path="res://Items/Types/tires.png" id="4_yxvue"]
+[ext_resource type="AudioStream" uid="uid://bdwjrkj2hl5rv" path="res://Units/Friendly/robot_drive.wav" id="5_kpd6q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8svxl"]
 size = Vector2(64, 24)
@@ -224,11 +225,12 @@ radius = 80.0
 height = 256.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_eai3t"]
-radius = 32.0
+radius = 24.0
 height = 80.0
 
 [node name="RoboticArm" type="CharacterBody2D" unique_id=2084668017]
 collision_layer = 4
+collision_mask = 9
 script = ExtResource("1_5gfb7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1729584105]
@@ -250,7 +252,7 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_2ntxr")
 
 [node name="PickupArea" type="Area2D" parent="." unique_id=661516945]
-collision_mask = 5
+collision_mask = 13
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea" unique_id=1900956385]
 position = Vector2(0, -16)
@@ -264,3 +266,7 @@ script = ExtResource("3_eai3t")
 [node name="item" type="Sprite2D" parent="Inventory" unique_id=484746738]
 texture = ExtResource("4_yxvue")
 offset = Vector2(0, -32)
+
+[node name="walk" type="AudioStreamPlayer2D" parent="." unique_id=1283905197]
+stream = ExtResource("5_kpd6q")
+volume_db = -10.0

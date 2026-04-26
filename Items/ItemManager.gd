@@ -1,6 +1,5 @@
 extends Node
 
-# Hold all the scenes here globally
 var item_scenes = {
 	"battery": preload("res://Items/Types/battery.tscn"),
 	"scrap": preload("res://Items/Types/scrap.tscn"),
@@ -9,18 +8,24 @@ var item_scenes = {
 
 func spawn_item(item_type: String, spawn_pos: Vector2) -> Node2D:
 	var scene = item_scenes.get(item_type)
-	if not scene: 
-		push_error("ItemManager: Scene not found for " + item_type)
-		return null
+	if not scene: return null
 	
 	var new_item = scene.instantiate()
-	new_item.global_position = spawn_pos
+	var root = get_tree().root
+	var game_world = null
 	
-	# Add it directly to the main game world
-	get_tree().current_scene.add_child(new_item)
-	
-	# Automatically trigger the robot cooldown timer
-	if new_item.has_method("drop_to_ground"):
-		new_item.drop_to_ground()
+	for child in root.get_children():
+		if child is Node2D and "Level" in child.name:
+			game_world = child
+			break
+			
+	if game_world:
+		game_world.add_child(new_item)
+		new_item.global_position = spawn_pos
+		new_item.global_scale = Vector2(1, 1) 
 		
-	return new_item
+		if new_item.has_method("drop_to_ground"):
+			new_item.drop_to_ground()
+			
+		return new_item
+	return null

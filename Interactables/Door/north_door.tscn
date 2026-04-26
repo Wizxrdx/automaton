@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://i602u2nf1v46"]
 
-[ext_resource type="Texture2D" uid="uid://bcej2pmg4ngl6" path="res://Interactables/Door/door.png" id="1_cpjwb"]
+[ext_resource type="Texture2D" uid="uid://cn8d4hnftb3co" path="res://Interactables/Door/door.png" id="1_cpjwb"]
 [ext_resource type="Script" uid="uid://dd2j6npw8o4k6" path="res://Interactables/Door/door.gd" id="1_yenfb"]
 [ext_resource type="Texture2D" uid="uid://bfvfcr81fcxeq" path="res://Interactables/Door/terminal.png" id="2_yenfb"]
 [ext_resource type="Script" uid="uid://b68tpmx3hykbw" path="res://Interactables/Door/terminal.gd" id="3_hg6o5"]
+[ext_resource type="AudioStream" uid="uid://dg80ynkl76fxk" path="res://Interactables/Door/terminal_gate.wav" id="5_175fq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_127u2"]
 size = Vector2(128, 96)
@@ -108,3 +109,7 @@ shape = SubResource("RectangleShape2D_yenfb")
 sprite_frames = SubResource("SpriteFrames_yeu7r")
 animation = &"open"
 offset = Vector2(0, -48)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=729453539]
+stream = ExtResource("5_175fq")
+volume_db = -6.0

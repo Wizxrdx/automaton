@@ -5,6 +5,7 @@ extends CharacterBody2D
 @export var total_cleaning_time := 3.0 
 @export var return_to_center_time := 2.0
 @export var detection = true
+@onready var move_sfx = $walk
 
 enum State { PATROL, CLEANING, RETURNING, CHASE }
 var current_state = State.PATROL
@@ -23,10 +24,22 @@ var shuffle_dir := Vector2.ZERO
 @onready var sprite = $movement
 @onready var flashlight = $DetectionArea/FlashlightVisual
 
+# NEW: Dedicated large area for hover and click
+@onready var interaction_area = $InteractionArea
+
 func _ready():
 	add_to_group("enemy")
-	input_pickable = true
+	
+	# Disable pickable on the body, enable it on the large Area
+	input_pickable = false 
+	interaction_area.input_pickable = true
+	
 	flashlight.visible = detection
+	
+	# Connect Hover and Click signals to the LARGE Area
+	interaction_area.mouse_entered.connect(_on_mouse_entered)
+	interaction_area.mouse_exited.connect(_on_mouse_exited)
+	interaction_area.input_event.connect(_on_interaction_input)
 	
 	if not detection_area.body_entered.is_connected(_on_vision_entered):
 		detection_area.body_entered.connect(_on_vision_entered)
@@ -35,8 +48,62 @@ func _ready():
 	wall_sensor.add_exception(self)
 	_pick_random_direction()
 
+# --- HOVER & CLICK LOGIC ---
+
+func _on_mouse_entered():
+	if not active: return
+	
+	var arm_available = false
+	for robot in RobotManager.all_robots:
+		if is_instance_valid(robot) and robot.is_in_group("robotic_arm"):
+			if robot.current_state == 0: # State.IDLE
+				arm_available = true
+				break
+	
+	if arm_available:
+		# Use a massive boost to make the whole sprite glow
+		sprite.modulate = Color(2.5, 2.5, 2.5) 
+
+func _on_mouse_exited():
+	if not active:
+		sprite.modulate = Color(0.3, 0.3, 0.3)
+	else:
+		sprite.modulate = Color(1, 1, 1)
+
+func _on_interaction_input(_viewport, event, _shape_idx):
+	# This handles the clickbox for the whole enemy
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if active:
+			# Signal a nearby robot to attack this enemy
+			_command_robot_to_attack()
+
+func _command_robot_to_attack():
+	# Find the closest idle arm and tell it to get this enemy
+	var closest_arm = null
+	var min_dist = 999999.0
+	
+	for robot in RobotManager.all_robots:
+		if is_instance_valid(robot) and robot.is_in_group("robotic_arm") and robot.current_state == 0:
+			var dist = global_position.distance_to(robot.global_position)
+			if dist < min_dist:
+				min_dist = dist
+				closest_arm = robot
+	
+	if closest_arm:
+		closest_arm.set_target(self)
+
+# --- PHYSICS AND AI ---
+
 func _physics_process(delta: float) -> void:
 	if not active: return 
+	
+	if velocity.length() > 10:
+		if not move_sfx.playing:
+			move_sfx.play()
+		# OPTIONAL: Change pitch based on speed for "juice"
+		move_sfx.pitch_scale = lerp(move_sfx.pitch_scale, 0.8 + (velocity.length() / 200.0), 0.1)
+	else:
+		move_sfx.stop()
 	
 	match current_state:
 		State.PATROL: _perform_patrol(delta)
@@ -44,104 +111,69 @@ func _physics_process(delta: float) -> void:
 		State.RETURNING: _perform_returning(delta)
 		State.CHASE: _perform_chase(delta)
 
-# --- 1. PATROL ---
 func _perform_patrol(delta: float):
 	velocity = current_direction * patrol_speed
 	wall_sensor.target_position = current_direction * 35.0
-	
-	# Check for wall hit
 	var collision = move_and_collide(velocity * delta, true)
 	
 	if wall_sensor.is_colliding() or collision != null:
-		var target = wall_sensor.get_collider() if wall_sensor.is_colliding() else collision.get_collider()
-		
-		if target.is_in_group("player_group"):
-			_trigger_chase()
-			return
-		else:
-			# HIT WALL: Transition immediately
-			approach_direction = current_direction 
-			_start_cleaning()
-			return
+		approach_direction = current_direction 
+		_start_cleaning()
+		return
 	
 	move_and_slide()
 	_update_sprite_animation(current_direction)
 
-# --- 2. CLEANING: Side-to-Side (No Snapping) ---
 func _start_cleaning():
 	current_state = State.CLEANING
 	cleaning_timer = total_cleaning_time
 	scrub_timer = 0.0 
-	
-	# KILL MOMENTUM IMMEDIATELY
-	# No more global_position teleporting. 
 	velocity = Vector2.ZERO
 
 func _perform_cleaning(delta: float):
 	cleaning_timer -= delta
 	scrub_timer -= delta
-	
 	if cleaning_timer <= 0:
 		_start_returning()
 		return
-
-	# Side-to-side shuffle logic
 	if scrub_timer <= 0:
-		if approach_direction.y != 0: # Facing North/South wall
+		if approach_direction.y != 0: 
 			shuffle_dir = Vector2.RIGHT if randf() > 0.5 else Vector2.LEFT
-		else: # Facing East/West wall
+		else: 
 			shuffle_dir = Vector2.DOWN if randf() > 0.5 else Vector2.UP
-		
 		scrub_timer = randf_range(0.4, 0.8)
-
-	# We use a slight offset from the wall so move_and_slide doesn't friction-lock us.
-	# But we do it via velocity, not teleporting.
-	var slide_velocity = shuffle_dir * 80.0
-	
-	# Add a tiny bit of "push-back" force in the velocity 
-	# to keep us from grinding into the wall's collision
-	velocity = slide_velocity + (-approach_direction * 5.0)
-	
+	velocity = (shuffle_dir * 80.0) + (-approach_direction * 5.0)
 	move_and_slide()
 	_update_sprite_animation(approach_direction)
 
-# --- 3. RETURNING ---
 func _start_returning():
 	current_state = State.RETURNING
 	returning_timer = return_to_center_time
 
 func _perform_returning(delta: float):
 	returning_timer -= delta
-	
 	if returning_timer <= 0:
 		_pick_random_direction()
 		current_state = State.PATROL
 		return
-	
 	velocity = -approach_direction * patrol_speed
 	move_and_slide()
 	_update_sprite_animation(velocity)
 
-# --- 4. CHASE ---
 func _perform_chase(_delta: float):
 	var players = get_tree().get_nodes_in_group("player_group")
 	if players.size() > 0:
 		var player = players[0]
 		var dir = global_position.direction_to(player.global_position)
 		velocity = dir * chase_speed
-		
 		detection_area.look_at(player.global_position)
 		detection_area.rotation_degrees -= 90 
 		_update_sprite_animation(dir)
-		
 		if global_position.distance_to(player.global_position) > 400:
 			_return_to_patrol()
 	else:
 		_return_to_patrol()
-	
 	move_and_slide()
-
-# --- HELPERS ---
 
 func _pick_random_direction():
 	var dirs = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
@@ -183,3 +215,12 @@ func incapacitate():
 	flashlight.visible = false
 	velocity = Vector2.ZERO
 	sprite.modulate = Color(0.3, 0.3, 0.3)
+	# Disable the click area once it's already down
+	interaction_area.input_pickable = false
+
+func reactivate():
+	sprite.modulate = Color(1, 1, 1)
+	active = true
+	flashlight.visible = true
+	interaction_area.input_pickable = true
+	

@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://dnop8su1clcoc" path="res://Interactables/Door/west_door.tscn" id="4_m2qq2"]
 [ext_resource type="PackedScene" uid="uid://0tr6kh6eyqq2" path="res://Player/player.tscn" id="5_sumr1"]
 [ext_resource type="PackedScene" uid="uid://i602u2nf1v46" path="res://Interactables/Door/north_door.tscn" id="6_td3x3"]
+[ext_resource type="PackedScene" uid="uid://ckgkf12sndwjd" path="res://Units/Friendly/RoboticArm/RoboticArm.tscn" id="7_u1my1"]
+[ext_resource type="PackedScene" uid="uid://d083lmfwijfha" path="res://Units/Friendly/AGV/AGV.tscn" id="8_m2qq2"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_k1wae"]
 vertices = PackedVector2Array(714, 266, 714, 74, 1206, 74, 1206, 566, 1014, 566, 1014, 714, 1206, 714, 1206, 906, 1270, 906, 1270, 1014, 1206, 1014, 1206, 1206, 714, 1206, 714, 714, 906, 714, 906, 566, 714, 374, 714, 566, 566, 266, 566, 374, 566, 566, 374, 566, 374, 714, 566, 714, 566, 1206, 74, 1206, 74, 714, 266, 714, 266, 566, 74, 566, 74, 74, 566, 74)
@@ -179,3 +181,54 @@ should_teleport = true
 [node name="SouthDoor3" parent="." unique_id=576704507 instance=ExtResource("6_td3x3")]
 position = Vector2(320, 1328)
 current_state = 2
+
+[node name="RoboticArm" parent="." unique_id=2084668017 instance=ExtResource("7_u1my1")]
+position = Vector2(416, 416)
+
+[node name="RoboticArm2" parent="." unique_id=786240336 instance=ExtResource("7_u1my1")]
+position = Vector2(296, 952)
+
+[node name="RoboticArm3" parent="." unique_id=526951087 instance=ExtResource("7_u1my1")]
+position = Vector2(440, 840)
+
+[node name="RoboticArm4" parent="." unique_id=20570280 instance=ExtResource("7_u1my1")]
+position = Vector2(160, 800)
+
+[node name="RoboticArm5" parent="." unique_id=312547515 instance=ExtResource("7_u1my1")]
+position = Vector2(464, 1096)
+
+[node name="CharacterBody2D" parent="." unique_id=69466887 instance=ExtResource("8_m2qq2")]
+position = Vector2(144, 1064)
+
+[node name="CharacterBody2D2" parent="." unique_id=794456401 instance=ExtResource("8_m2qq2")]
+position = Vector2(224, 1096)
+
+[node name="CharacterBody2D3" parent="." unique_id=505627353 instance=ExtResource("8_m2qq2")]
+position = Vector2(192, 400)
+
+[node name="CharacterBody2D4" parent="." unique_id=1893617237 instance=ExtResource("8_m2qq2")]
+position = Vector2(344, 256)
+
+[node name="CharacterBody2D5" parent="." unique_id=1532877011 instance=ExtResource("8_m2qq2")]
+position = Vector2(168, 240)
+
+[node name="CharacterBody2D6" parent="." unique_id=1717684293 instance=ExtResource("8_m2qq2")]
+position = Vector2(432, 192)
+
+[node name="CharacterBody2D7" parent="." unique_id=1657982488 instance=ExtResource("8_m2qq2")]
+position = Vector2(184, 488)
+
+[node name="CharacterBody2D8" parent="." unique_id=1879971891 instance=ExtResource("8_m2qq2")]
+position = Vector2(896, 296)
+
+[node name="CharacterBody2D9" parent="." unique_id=503003057 instance=ExtResource("8_m2qq2")]
+position = Vector2(1048, 352)
+
+[node name="CharacterBody2D10" parent="." unique_id=96278503 instance=ExtResource("8_m2qq2")]
+position = Vector2(1032, 184)
+
+[node name="CharacterBody2D11" parent="." unique_id=2008589986 instance=ExtResource("8_m2qq2")]
+position = Vector2(824, 176)
+
+[node name="CharacterBody2D12" parent="." unique_id=1303126299 instance=ExtResource("8_m2qq2")]
+position = Vector2(792, 488)

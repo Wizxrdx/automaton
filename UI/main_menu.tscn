@@ -83,10 +83,6 @@ autoplay = &"play_ui"
 layout_mode = 2
 text = "Start"
 
-[node name="Button2" type="Button" parent="VBoxContainer" unique_id=1186391872]
-layout_mode = 2
-text = "Quit"
-
 [node name="FadeOverlay" type="ColorRect" parent="." unique_id=788989379]
 self_modulate = Color(1, 1, 1, 0)
 layout_mode = 0
@@ -103,4 +99,3 @@ position = Vector2(448, 256)
 zoom = Vector2(0.345, 0.345)
 
 [connection signal="button_up" from="VBoxContainer/Button" to="." method="_on_start_button_pressed"]
-[connection signal="button_up" from="VBoxContainer/Button2" to="." method="_on_quit_button_pressed"]

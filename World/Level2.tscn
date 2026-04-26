@@ -5,6 +5,12 @@
 [ext_resource type="PackedScene" uid="uid://0tr6kh6eyqq2" path="res://Player/player.tscn" id="3_u0hd0"]
 [ext_resource type="PackedScene" uid="uid://dljoodh54h7l" path="res://Interactables/Door/east_door.tscn" id="5_t570r"]
 [ext_resource type="PackedScene" uid="uid://dnop8su1clcoc" path="res://Interactables/Door/west_door.tscn" id="5_u0hd0"]
+[ext_resource type="PackedScene" uid="uid://ctf1hce7y2wse" path="res://Interactables/Machine/RoboticArmMachine.tscn" id="6_7pe88"]
+[ext_resource type="PackedScene" uid="uid://j4ep4oiu8myj" path="res://Items/Types/battery.tscn" id="7_u2bc2"]
+[ext_resource type="PackedScene" uid="uid://lswo77r1fq6i" path="res://Items/Types/scrap.tscn" id="8_fq81t"]
+[ext_resource type="PackedScene" uid="uid://cy5no6apgj8ds" path="res://Items/Types/tires.tscn" id="9_ldp7c"]
+[ext_resource type="FontFile" uid="uid://m5fmm1kyaf2y" path="res://UI/Pix32.ttf" id="10_fq81t"]
+[ext_resource type="PackedScene" uid="uid://bmvy7vir0tb5v" path="res://Units/Enemy/Cleaner.tscn" id="10_u2bc2"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_k1wae"]
 vertices = PackedVector2Array(822, 202, 886, 202, 886, 310, 822, 310, 822, 438, 74, 438, 74, 310, 74, 202, 10, 310, 10, 202, 822, 74, 74, 74)
@@ -143,6 +149,10 @@ physics_layer_0/collision_layer = 1
 navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_3hj1s")
 
+[sub_resource type="LabelSettings" id="LabelSettings_ldp7c"]
+font = ExtResource("10_fq81t")
+font_size = 12
+
 [node name="Level2" type="Node2D" unique_id=453771296]
 y_sort_enabled = true
 script = ExtResource("1_u0hd0")
@@ -171,3 +181,77 @@ current_state = 2
 [node name="StaticLevelCamera" type="Camera2D" parent="." unique_id=667407825]
 position = Vector2(448, 256)
 zoom = Vector2(0.345, 0.345)
+
+[node name="RoboticArm" parent="." unique_id=896008313 instance=ExtResource("6_7pe88")]
+position = Vector2(224, 392)
+
+[node name="Battery" parent="." unique_id=1795187254 instance=ExtResource("7_u2bc2")]
+position = Vector2(96, 352)
+
+[node name="Scrap" parent="." unique_id=1471177923 instance=ExtResource("8_fq81t")]
+position = Vector2(144, 352)
+
+[node name="Tires" parent="." unique_id=455181651 instance=ExtResource("9_ldp7c")]
+position = Vector2(96, 400)
+
+[node name="Tires2" parent="." unique_id=28317133 instance=ExtResource("9_ldp7c")]
+position = Vector2(144, 400)
+
+[node name="Label" type="Label" parent="." unique_id=73936711]
+offset_left = 272.0
+offset_top = 328.0
+offset_right = 514.0
+offset_bottom = 403.0
+text = "You can Interact with the robot
+while empty handed to see
+what items are missing"
+label_settings = SubResource("LabelSettings_ldp7c")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="." unique_id=484905352]
+offset_left = 112.0
+offset_top = 80.0
+offset_right = 354.0
+offset_bottom = 181.0
+text = "This is a cleaner robot it will
+chase you if it detected you
+
+try not to get caught!"
+label_settings = SubResource("LabelSettings_ldp7c")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="." unique_id=1290386283]
+offset_left = 472.0
+offset_top = 72.0
+offset_right = 776.0
+offset_bottom = 199.0
+text = "You can command arm robot to hold
+off a cleaner robot for a limited time.
+
+Press LMB on the cleaner robot to try it
+Press RMB to let go"
+label_settings = SubResource("LabelSettings_ldp7c")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label4" type="Label" parent="." unique_id=1043446402]
+offset_left = 528.0
+offset_top = 312.0
+offset_right = 832.0
+offset_bottom = 439.0
+text = "You can also command arm robot
+to pick up items using LMB.
+
+But you need an empty carrier robot"
+label_settings = SubResource("LabelSettings_ldp7c")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Cleaner" parent="." unique_id=2084668017 instance=ExtResource("10_u2bc2")]
+position = Vector2(400, 152)
+patrol_speed = 0.0
+chase_speed = 0.0
+total_cleaning_time = 0.0
+return_to_center_time = 0.0

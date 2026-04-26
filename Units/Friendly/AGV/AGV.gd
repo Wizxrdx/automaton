@@ -3,11 +3,12 @@ extends CharacterBody2D
 @export var speed := 190.0
 @export var acceleration := 15.0
 @export var friction := 10.0
-@export var separation_dist := 45.0
-@export var follow_distance := 60.0
+@export var separation_dist := 75.0
+@export var follow_distance := 80.0
 
 @onready var inventory_system = $Inventory 
 @onready var movement: AnimatedSprite2D = $movement
+@onready var move_sfx = $walk
 
 var player: Node2D
 var neighbors: Array = [] 
@@ -24,6 +25,14 @@ func _ready():
 
 func _physics_process(_delta: float) -> void:
 	if not player: return
+	if velocity.length() > 10:
+		if not move_sfx.playing:
+			move_sfx.play()
+		# OPTIONAL: Change pitch based on speed for "juice"
+		move_sfx.pitch_scale = lerp(move_sfx.pitch_scale, 0.8 + (velocity.length() / 200.0), 0.1)
+	else:
+		move_sfx.stop()
+		
 	var to_player = player.global_position - global_position
 	var dist_sq = to_player.length_squared()
 	var desired_velocity = Vector2.ZERO
