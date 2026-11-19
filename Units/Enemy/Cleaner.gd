@@ -36,10 +36,9 @@ func _ready():
 	
 	flashlight.visible = detection
 	
-	# Connect Hover and Click signals to the LARGE Area
+	# Connect Hover signals to the LARGE Area (left-click targeting is handled centrally in player.gd)
 	interaction_area.mouse_entered.connect(_on_mouse_entered)
 	interaction_area.mouse_exited.connect(_on_mouse_exited)
-	interaction_area.input_event.connect(_on_interaction_input)
 	
 	if not detection_area.body_entered.is_connected(_on_vision_entered):
 		detection_area.body_entered.connect(_on_vision_entered)
@@ -164,16 +163,26 @@ func _perform_chase(_delta: float):
 	var players = get_tree().get_nodes_in_group("player_group")
 	if players.size() > 0:
 		var player = players[0]
+		var dist = global_position.distance_to(player.global_position)
+		if chase_speed > 0.0 and dist <= 42.0:
+			LevelManager.on_player_caught()
+			return
 		var dir = global_position.direction_to(player.global_position)
 		velocity = dir * chase_speed
 		detection_area.look_at(player.global_position)
 		detection_area.rotation_degrees -= 90 
 		_update_sprite_animation(dir)
-		if global_position.distance_to(player.global_position) > 400:
+		if dist > 400:
 			_return_to_patrol()
 	else:
 		_return_to_patrol()
 	move_and_slide()
+	if chase_speed > 0.0:
+		for i in range(get_slide_collision_count()):
+			var col = get_slide_collision(i).get_collider()
+			if is_instance_valid(col) and col.is_in_group("player_group"):
+				LevelManager.on_player_caught()
+				return
 
 func _pick_random_direction():
 	var dirs = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]

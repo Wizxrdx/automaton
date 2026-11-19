@@ -7,12 +7,12 @@ extends Node2D
 @export var is_menu_background := false
 
 func _ready():
-	# If we are in the menu, we wait.
-	if is_menu_background:
+	# If we are embedded inside the MainMenu control, wait in menu background mode.
+	if is_menu_background and get_parent() != get_tree().root:
 		setup_menu_mode()
 	else:
-		# If we are playing the level normally (e.g. testing the scene)
-		start_level_normally()
+		# If Level1 is loaded directly (e.g. restarting after win or testing Level1), start gameplay.
+		start_as_player()
 
 func setup_menu_mode():
 	player.hide()

@@ -1,7 +1,7 @@
 extends Area2D
 
 @export var item_type: String = "scrap"
-@export var cooldown_time: float = 30.0
+@export var cooldown_time: float = 0.2
 
 @onready var sprite = $Sprite2D
 

@@ -5,6 +5,7 @@ const CELL_SIZE = 128
 
 # NEW: The Data Vault for scene transitions
 var saved_robot_data = [] 
+var level_start_robot_data = []
 var robot_scenes = {
 	"robotic_arm": preload("res://Units/Friendly/RoboticArm/RoboticArm.tscn"),
 	"agv": preload("res://Units/Friendly/AGV/AGV.tscn")
@@ -25,7 +26,14 @@ func prepare_for_level_swap():
 				"item": bot.inventory_system.held_item
 			})
 	
+	# Snapshot the state entering the next level so retrying the level restores it
+	level_start_robot_data = saved_robot_data.duplicate(true)
+
 	# After saving data, clear the physical node references
+	all_robots.clear()
+
+func restore_level_start_robots():
+	saved_robot_data = level_start_robot_data.duplicate(true)
 	all_robots.clear()
 
 func spawn_saved_robots(level_node, spawn_pos: Vector2):

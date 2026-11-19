@@ -209,10 +209,22 @@ func _get_object_under_mouse():
 	var query = PhysicsPointQueryParameters2D.new()
 	query.position = get_global_mouse_position()
 	query.collide_with_areas = true
-	var result = space_state.intersect_point(query)
-	if result:
-		return result[0].collider
-	return null
+	query.collide_with_bodies = true
+	var results = space_state.intersect_point(query, 32)
+	var found_item = null
+	for hit in results:
+		var col = hit.collider
+		if not is_instance_valid(col):
+			continue
+		if col.is_in_group("enemy") and col.get("active") != false:
+			return col
+		if col.name == "InteractionArea" and col.get_parent() and col.get_parent().is_in_group("enemy"):
+			var enemy = col.get_parent()
+			if enemy.get("active") != false:
+				return enemy
+		if col.is_in_group("item") and found_item == null:
+			found_item = col
+	return found_item
 
 func _issue_command(target):
 	var arms = get_tree().get_nodes_in_group("robotic_arm")

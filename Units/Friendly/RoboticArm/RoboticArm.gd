@@ -141,14 +141,20 @@ func _physics_process(_delta: float) -> void:
 				move_towards_target(player.global_position, follow_distance)
 		State.MOVING_TO_ITEM:
 			if is_instance_valid(target_item):
-				move_towards_target(target_item.global_position, 0.0) 
+				move_towards_target(target_item.global_position, 0.0)
+				if pickup_area.overlaps_area(target_item):
+					_pick_up_item()
 			elif is_instance_valid(target_enemy):
 				move_towards_target(target_enemy.global_position, 0.0)
+				if pickup_area.overlaps_body(target_enemy):
+					_latch_onto_enemy(target_enemy)
 			else:
 				_reset_state()
 		State.MOVING_TO_AGV:
 			if is_instance_valid(target_agv):
 				move_towards_target(target_agv.global_position, 0.0)
+				if pickup_area.overlaps_body(target_agv):
+					_load_onto_agv()
 			else:
 				_drop_item_on_ground()
 				_reset_state()
@@ -165,13 +171,13 @@ func _on_pickup_area_entered(area: Area2D) -> void:
 	if current_state == State.MOVING_TO_ITEM:
 		if area == target_item:
 			_pick_up_item()
-		elif area.get_parent().is_in_group("enemy"):
-			_latch_onto_enemy(area.get_parent())
+		elif is_instance_valid(target_enemy) and area.name == "InteractionArea" and area.get_parent() == target_enemy:
+			_latch_onto_enemy(target_enemy)
 
 func _on_pickup_body_entered(body: Node2D) -> void:
 	if current_state == State.MOVING_TO_AGV and body == target_agv:
 		_load_onto_agv()
-	elif current_state == State.MOVING_TO_ITEM and body.is_in_group("enemy"):
+	elif current_state == State.MOVING_TO_ITEM and is_instance_valid(target_enemy) and body == target_enemy:
 		_latch_onto_enemy(body)
 
 # --- MOVEMENT HELPERS ---
