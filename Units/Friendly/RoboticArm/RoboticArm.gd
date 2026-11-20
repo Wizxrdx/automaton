@@ -118,6 +118,8 @@ func _release_latch():
 func _reset_state() -> void:
 	if is_instance_valid(target_agv): 
 		target_agv.is_reserved = false 
+	if inventory_system.has_item():
+		_drop_item_on_ground()
 	
 	target_item = null
 	target_agv = null
@@ -139,7 +141,15 @@ func _physics_process(_delta: float) -> void:
 
 	match current_state:
 		State.IDLE:
-			if player:
+			if inventory_system.has_item():
+				var free_agv = _find_free_agv()
+				if free_agv:
+					target_agv = free_agv
+					target_agv.is_reserved = true
+					current_state = State.MOVING_TO_AGV
+				else:
+					_drop_item_on_ground()
+			elif player:
 				move_towards_target(player.global_position, follow_distance)
 		State.MOVING_TO_ITEM:
 			if is_instance_valid(target_item):

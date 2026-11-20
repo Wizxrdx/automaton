@@ -18,12 +18,27 @@ func register_robot(robot):
 
 func prepare_for_level_swap():
 	saved_robot_data.clear()
+	# If any Robotic Arm is mid-delivery to an AGV when leaving the level, complete the transfer onto its target AGV first
+	for bot in all_robots:
+		if is_instance_valid(bot) and bot.is_in_group("robotic_arm") and bot.inventory_system.has_item():
+			var target_agv = bot.get("target_agv")
+			if is_instance_valid(target_agv) and not target_agv.has_item():
+				target_agv.add_to_storage(bot.inventory_system.take_item())
+			else:
+				for other in all_robots:
+					if is_instance_valid(other) and other.is_in_group("agv") and not other.has_item():
+						other.add_to_storage(bot.inventory_system.take_item())
+						break
+				# Never leave an item stuck on a Robotic Arm across level transitions
+				if bot.inventory_system.has_item():
+					bot.inventory_system.take_item()
+
 	for bot in all_robots:
 		if is_instance_valid(bot):
 			var type = "robotic_arm" if bot.is_in_group("robotic_arm") else "agv"
 			saved_robot_data.append({
 				"type": type,
-				"item": bot.inventory_system.held_item
+				"item": null if type == "robotic_arm" else bot.inventory_system.held_item
 			})
 	
 	# Snapshot the state entering the next level so retrying the level restores it
