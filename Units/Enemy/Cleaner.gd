@@ -49,8 +49,15 @@ func _ready():
 
 # --- HOVER & CLICK LOGIC ---
 
+func is_targeted_by_arm() -> bool:
+	for robot in RobotManager.all_robots:
+		if is_instance_valid(robot) and robot.is_in_group("robotic_arm"):
+			if robot.get("target_enemy") == self:
+				return true
+	return false
+
 func _on_mouse_entered():
-	if not active: return
+	if not active or is_targeted_by_arm(): return
 	
 	var arm_available = false
 	for robot in RobotManager.all_robots:
@@ -68,28 +75,6 @@ func _on_mouse_exited():
 		sprite.modulate = Color(0.3, 0.3, 0.3)
 	else:
 		sprite.modulate = Color(1, 1, 1)
-
-func _on_interaction_input(_viewport, event, _shape_idx):
-	# This handles the clickbox for the whole enemy
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		if active:
-			# Signal a nearby robot to attack this enemy
-			_command_robot_to_attack()
-
-func _command_robot_to_attack():
-	# Find the closest idle arm and tell it to get this enemy
-	var closest_arm = null
-	var min_dist = 999999.0
-	
-	for robot in RobotManager.all_robots:
-		if is_instance_valid(robot) and robot.is_in_group("robotic_arm") and robot.current_state == 0:
-			var dist = global_position.distance_to(robot.global_position)
-			if dist < min_dist:
-				min_dist = dist
-				closest_arm = robot
-	
-	if closest_arm:
-		closest_arm.set_target(self)
 
 # --- PHYSICS AND AI ---
 

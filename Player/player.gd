@@ -228,10 +228,15 @@ func _get_object_under_mouse():
 
 func _issue_command(target):
 	var arms = get_tree().get_nodes_in_group("robotic_arm")
+	# Do not order another robot if any Robotic Arm is already targeting or latched onto this target
+	for arm in arms:
+		if is_instance_valid(arm) and (arm.target_enemy == target or arm.target_item == target):
+			return
+
 	var best_arm = null
 	var min_dist = INF
 	for arm in arms:
-		if arm.current_state == arm.State.IDLE:
+		if is_instance_valid(arm) and arm.current_state == arm.State.IDLE:
 			var d = arm.global_position.distance_to(target.global_position)
 			if d < min_dist:
 				min_dist = d

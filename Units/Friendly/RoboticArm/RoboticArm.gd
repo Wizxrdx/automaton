@@ -49,8 +49,8 @@ func _on_mouse_exited():
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-		# If we are latching OR moving to an enemy/item, RMB should kill the command
-		if current_state != State.IDLE:
+		# Release this arm if it is incapacitating (or moving to incapacitate) a Cleaner
+		if current_state == State.LATCHED or is_instance_valid(target_enemy):
 			_release_latch()
 
 # --- THE COMMAND SYSTEM ---
@@ -74,6 +74,8 @@ func set_target(new_target: Node2D):
 	elif new_target.is_in_group("enemy"):
 		target_enemy = new_target
 		current_state = State.MOVING_TO_ITEM
+		if new_target.has_node("movement"):
+			new_target.get_node("movement").modulate = Color(1, 1, 1)
 
 func _find_free_agv() -> Node2D:
 	var agvs = get_tree().get_nodes_in_group("agv")
