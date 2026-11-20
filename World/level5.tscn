@@ -11,8 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bmvy7vir0tb5v" path="res://Units/Enemy/Cleaner.tscn" id="10_guppn"]
 [ext_resource type="PackedScene" uid="uid://lswo77r1fq6i" path="res://Items/Types/scrap.tscn" id="11_kcibk"]
 [ext_resource type="PackedScene" uid="uid://j4ep4oiu8myj" path="res://Items/Types/battery.tscn" id="11_ywyoh"]
-[ext_resource type="Texture2D" uid="uid://b4xhyb2jx5wym" path="res://Items/Types/scrap.png" id="12_l3wo0"]
-[ext_resource type="Texture2D" uid="uid://bler6g6hgne8l" path="res://Items/Types/tires.png" id="13_g6aln"]
+[ext_resource type="PackedScene" uid="uid://cy5no6apgj8ds" path="res://Items/Types/tires.tscn" id="13_g6aln"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_k1wae"]
 vertices = PackedVector2Array(1034, 394, 1206, 74, 1206, 566, 1014, 566, 1034, 246, 1098, 138, 502, 778, 502, 1142, 438, 1142, 394, 1034, 394, 886, 438, 778, 886, 394, 906, 566, 394, 394, 394, 246, 566, 374, 566, 566, 374, 566, 246, 394, 458, 138, 458, 74, 566, 74, 566, 266, 714, 266, 714, 74, 822, 74, 822, 138, 1098, 74, 886, 246, 714, 374, 1014, 714, 1206, 714, 1206, 906, 1270, 906, 1270, 1014, 1206, 1014, 1206, 1078, 842, 1078, 842, 714, 906, 714, 714, 566, 182, 138, 246, 246, 374, 714, 438, 714, 246, 886, 202, 778, 438, 1206, 374, 1206, 246, 1034, 374, 1270, 266, 1270, 266, 1206, 202, 1206, 202, 1142, 138, 1142, 138, 778, 202, 714, 266, 714, 266, 566, 74, 566, 74, 74, 182, 74)
@@ -247,25 +246,20 @@ position = Vector2(464, 112)
 [node name="Scrap3" parent="." unique_id=1007167035 instance=ExtResource("11_kcibk")]
 position = Vector2(536, 144)
 
-[node name="Tires" type="Sprite2D" parent="." unique_id=1169664508]
+[node name="Tires" parent="." unique_id=1169664508 instance=ExtResource("13_g6aln")]
 position = Vector2(768, 112)
-texture = ExtResource("13_g6aln")
 
-[node name="Tires2" type="Sprite2D" parent="." unique_id=1544331816]
+[node name="Tires2" parent="." unique_id=1544331816 instance=ExtResource("13_g6aln")]
 position = Vector2(776, 160)
-texture = ExtResource("13_g6aln")
 
-[node name="Tires3" type="Sprite2D" parent="." unique_id=2110878922]
+[node name="Tires3" parent="." unique_id=2110878922 instance=ExtResource("13_g6aln")]
 position = Vector2(824, 96)
-texture = ExtResource("13_g6aln")
 
-[node name="Tires4" type="Sprite2D" parent="." unique_id=1047877051]
+[node name="Tires4" parent="." unique_id=1047877051 instance=ExtResource("13_g6aln")]
 position = Vector2(832, 152)
-texture = ExtResource("13_g6aln")
 
-[node name="Tires5" type="Sprite2D" parent="." unique_id=1388542371]
+[node name="Tires5" parent="." unique_id=1388542371 instance=ExtResource("13_g6aln")]
 position = Vector2(760, 472)
-texture = ExtResource("13_g6aln")
 
 [node name="Scrap4" parent="." unique_id=1948090010 instance=ExtResource("11_kcibk")]
 position = Vector2(752, 536)
@@ -276,6 +270,5 @@ position = Vector2(808, 528)
 [node name="Battery4" parent="." unique_id=1513805838 instance=ExtResource("11_ywyoh")]
 position = Vector2(824, 488)
 
-[node name="Scrap5" type="Sprite2D" parent="." unique_id=2025125]
+[node name="Scrap5" parent="." unique_id=2025125 instance=ExtResource("11_kcibk")]
 position = Vector2(752, 408)
-texture = ExtResource("12_l3wo0")

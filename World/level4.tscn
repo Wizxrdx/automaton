@@ -11,8 +11,8 @@
 [ext_resource type="PackedScene" uid="uid://ctf1hce7y2wse" path="res://Interactables/Machine/RoboticArmMachine.tscn" id="9_njdx6"]
 [ext_resource type="PackedScene" uid="uid://bmvy7vir0tb5v" path="res://Units/Enemy/Cleaner.tscn" id="10_guppn"]
 [ext_resource type="PackedScene" uid="uid://j4ep4oiu8myj" path="res://Items/Types/battery.tscn" id="11_ywyoh"]
-[ext_resource type="Texture2D" uid="uid://b4xhyb2jx5wym" path="res://Items/Types/scrap.png" id="12_l3wo0"]
-[ext_resource type="Texture2D" uid="uid://bler6g6hgne8l" path="res://Items/Types/tires.png" id="13_g6aln"]
+[ext_resource type="PackedScene" uid="uid://lswo77r1fq6i" path="res://Items/Types/scrap.tscn" id="12_l3wo0"]
+[ext_resource type="PackedScene" uid="uid://cy5no6apgj8ds" path="res://Items/Types/tires.tscn" id="13_g6aln"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_k1wae"]
 vertices = PackedVector2Array(1206, 74, 1206, 566, 1014, 566, 714, 74, 1014, 714, 1206, 714, 1206, 906, 842, 970, 1270, 906, 1270, 1014, 1206, 1014, 1206, 1206, 842, 1206, 842, 1078, 566, 1078, 566, 1206, 374, 1206, 266, 950, 374, 970, 374, 1270, 266, 1270, 138, 950, 138, 714, 266, 714, 266, 566, 74, 566, 74, 458, 138, 458, 138, 394, 202, 394, 374, 566, 202, 266, 394, 266, 566, 566, 394, 202, 566, 202, 842, 714, 906, 714, 906, 566, 714, 566)
@@ -199,21 +199,17 @@ position = Vector2(328, 344)
 [node name="Battery" parent="." unique_id=1795187254 instance=ExtResource("11_ywyoh")]
 position = Vector2(168, 920)
 
-[node name="Scrap" type="Sprite2D" parent="." unique_id=9980281]
+[node name="Scrap" parent="." unique_id=9980281 instance=ExtResource("12_l3wo0")]
 position = Vector2(216, 904)
-texture = ExtResource("12_l3wo0")
 
-[node name="Tires" type="Sprite2D" parent="." unique_id=263020310]
+[node name="Tires" parent="." unique_id=263020310 instance=ExtResource("13_g6aln")]
 position = Vector2(768, 120)
-texture = ExtResource("13_g6aln")
 
-[node name="Tires2" type="Sprite2D" parent="." unique_id=1871215047]
+[node name="Tires2" parent="." unique_id=1871215047 instance=ExtResource("13_g6aln")]
 position = Vector2(816, 88)
-texture = ExtResource("13_g6aln")
 
-[node name="Tires3" type="Sprite2D" parent="." unique_id=1535405733]
+[node name="Tires3" parent="." unique_id=1535405733 instance=ExtResource("13_g6aln")]
 position = Vector2(816, 136)
-texture = ExtResource("13_g6aln")
 
 [node name="Battery2" parent="." unique_id=291385969 instance=ExtResource("11_ywyoh")]
 position = Vector2(1136, 528)
