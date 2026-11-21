@@ -1,7 +1,9 @@
 extends CanvasLayer
 
-@onready var volume_slider: HSlider = $Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeRow/VolumeSlider
-@onready var volume_value: Label = $Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeRow/VolumeValue
+@onready var music_slider: HSlider = $Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/MusicRow/MusicSlider
+@onready var music_value: Label = $Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/MusicRow/MusicValue
+@onready var sfx_slider: HSlider = $Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/SfxRow/SfxSlider
+@onready var sfx_value: Label = $Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/SfxRow/SfxValue
 
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -9,10 +11,14 @@ func _ready():
 	sync_volume_ui()
 
 func sync_volume_ui():
-	if volume_slider:
-		volume_slider.set_value_no_signal(LevelManager.master_volume)
-	if volume_value:
-		volume_value.text = str(int(round(LevelManager.master_volume * 100.0))) + "%"
+	if music_slider:
+		music_slider.set_value_no_signal(LevelManager.music_volume)
+	if music_value:
+		music_value.text = str(int(round(LevelManager.music_volume * 100.0))) + "%"
+	if sfx_slider:
+		sfx_slider.set_value_no_signal(LevelManager.sfx_volume)
+	if sfx_value:
+		sfx_value.text = str(int(round(LevelManager.sfx_volume * 100.0))) + "%"
 
 func open_menu():
 	sync_volume_ui()
@@ -33,10 +39,15 @@ func _on_restart_button_pressed():
 	get_tree().paused = false
 	LevelManager.restart_current_level()
 
-func _on_volume_slider_value_changed(value: float):
-	LevelManager.set_master_volume(value)
-	if volume_value:
-		volume_value.text = str(int(round(value * 100.0))) + "%"
+func _on_music_slider_value_changed(value: float):
+	LevelManager.set_music_volume(value)
+	if music_value:
+		music_value.text = str(int(round(value * 100.0))) + "%"
+
+func _on_sfx_slider_value_changed(value: float):
+	LevelManager.set_sfx_volume(value)
+	if sfx_value:
+		sfx_value.text = str(int(round(value * 100.0))) + "%"
 
 func _on_main_menu_button_pressed():
 	visible = false

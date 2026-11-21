@@ -1,13 +1,17 @@
 extends Control
 
 @onready var level = $LevelInstance
-@onready var volume_slider: HSlider = $VBoxContainer/VolumePanel/VolumeMargin/VolumeRow/VolumeSlider
-@onready var volume_value: Label = $VBoxContainer/VolumePanel/VolumeMargin/VolumeRow/VolumeValue
+@onready var music_slider: HSlider = $VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/MusicRow/MusicSlider
+@onready var music_value: Label = $VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/MusicRow/MusicValue
+@onready var sfx_slider: HSlider = $VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/SfxRow/SfxSlider
+@onready var sfx_value: Label = $VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/SfxRow/SfxValue
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	volume_slider.set_value_no_signal(LevelManager.master_volume)
-	volume_value.text = str(int(round(LevelManager.master_volume * 100.0))) + "%"
+	music_slider.set_value_no_signal(LevelManager.music_volume)
+	music_value.text = str(int(round(LevelManager.music_volume * 100.0))) + "%"
+	sfx_slider.set_value_no_signal(LevelManager.sfx_volume)
+	sfx_value.text = str(int(round(LevelManager.sfx_volume * 100.0))) + "%"
 
 	# Force the level into background mode
 	level.is_menu_background = true
@@ -51,7 +55,12 @@ func _on_start_button_pressed():
 	
 	self.queue_free()
 
-func _on_volume_slider_value_changed(value: float):
-	LevelManager.set_master_volume(value)
-	if volume_value:
-		volume_value.text = str(int(round(value * 100.0))) + "%"
+func _on_music_slider_value_changed(value: float):
+	LevelManager.set_music_volume(value)
+	if music_value:
+		music_value.text = str(int(round(value * 100.0))) + "%"
+
+func _on_sfx_slider_value_changed(value: float):
+	LevelManager.set_sfx_volume(value)
+	if sfx_value:
+		sfx_value.text = str(int(round(value * 100.0))) + "%"

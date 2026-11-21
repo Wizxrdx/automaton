@@ -32,7 +32,9 @@ label_settings = SubResource("LabelSettings_p48ii")
 [node name="put_item" type="AudioStreamPlayer2D" parent="." unique_id=1785877683]
 stream = ExtResource("3_pnr1i")
 volume_db = -6.0
+bus = &"SFX"
 
 [node name="machine_revive" type="AudioStreamPlayer2D" parent="." unique_id=951230371]
 stream = ExtResource("4_jldv1")
 volume_db = -6.0
+bus = &"SFX"

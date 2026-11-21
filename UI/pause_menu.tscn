@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dmc6yfjk58enp"]
 
-[ext_resource type="Script" path="res://UI/pause_menu.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c8ete2055eigh" path="res://UI/pause_menu.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://cohktqv675ns7" path="res://UI/logo.png" id="2_logo"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d8nwk"]
@@ -45,12 +45,12 @@ _data = {
 &"play_ui": SubResource("Animation_4cwpn")
 }
 
-[node name="PauseMenu" type="CanvasLayer"]
+[node name="PauseMenu" type="CanvasLayer" unique_id=1033031630]
 process_mode = 3
 layer = 10
 script = ExtResource("1_script")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="ColorRect" parent="." unique_id=185848551]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -58,7 +58,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.6)
 
-[node name="MenuAnchor" type="Control" parent="Backdrop"]
+[node name="MenuAnchor" type="Control" parent="Backdrop" unique_id=196679861]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -69,7 +69,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.345, 0.345)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Backdrop/MenuAnchor"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Backdrop/MenuAnchor" unique_id=1622686057]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -83,42 +83,47 @@ offset_bottom = 132.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="Backdrop/MenuAnchor/VBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="Backdrop/MenuAnchor/VBoxContainer" unique_id=781314242]
 layout_mode = 2
 texture = SubResource("AtlasTexture_d8nwk")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Backdrop/MenuAnchor/VBoxContainer/TextureRect"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Backdrop/MenuAnchor/VBoxContainer/TextureRect" unique_id=1124935452]
 libraries/ = SubResource("AnimationLibrary_f40uw")
 autoplay = &"play_ui"
 
-[node name="ResumeButton" type="Button" parent="Backdrop/MenuAnchor/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="Backdrop/MenuAnchor/VBoxContainer" unique_id=981618736]
 layout_mode = 2
 text = "Resume"
 
-[node name="RestartButton" type="Button" parent="Backdrop/MenuAnchor/VBoxContainer"]
+[node name="RestartButton" type="Button" parent="Backdrop/MenuAnchor/VBoxContainer" unique_id=1578159729]
 layout_mode = 2
 text = "Restart Level"
 
-[node name="VolumePanel" type="PanelContainer" parent="Backdrop/MenuAnchor/VBoxContainer"]
+[node name="VolumePanel" type="PanelContainer" parent="Backdrop/MenuAnchor/VBoxContainer" unique_id=1417846065]
 layout_mode = 2
 
-[node name="VolumeMargin" type="MarginContainer" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel"]
+[node name="VolumeMargin" type="MarginContainer" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel" unique_id=197500037]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 6
 
-[node name="VolumeRow" type="HBoxContainer" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin"]
+[node name="VolumeVBox" type="VBoxContainer" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="MusicRow" type="HBoxContainer" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="VolumeLabel" type="Label" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeRow"]
+[node name="MusicLabel" type="Label" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/MusicRow"]
+custom_minimum_size = Vector2(56, 0)
 layout_mode = 2
-text = "Volume"
+text = "Music"
 
-[node name="VolumeSlider" type="HSlider" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeRow"]
+[node name="MusicSlider" type="HSlider" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/MusicRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -126,17 +131,42 @@ max_value = 1.0
 step = 0.05
 value = 1.0
 
-[node name="VolumeValue" type="Label" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeRow"]
+[node name="MusicValue" type="Label" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/MusicRow"]
 custom_minimum_size = Vector2(44, 0)
 layout_mode = 2
 text = "100%"
 horizontal_alignment = 2
 
-[node name="MainMenuButton" type="Button" parent="Backdrop/MenuAnchor/VBoxContainer"]
+[node name="SfxRow" type="HBoxContainer" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="SfxLabel" type="Label" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/SfxRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+text = "SFX"
+
+[node name="SfxSlider" type="HSlider" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/SfxRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="SfxValue" type="Label" parent="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/SfxRow"]
+custom_minimum_size = Vector2(44, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="MainMenuButton" type="Button" parent="Backdrop/MenuAnchor/VBoxContainer" unique_id=2102579436]
 layout_mode = 2
 text = "Main Menu"
 
 [connection signal="button_up" from="Backdrop/MenuAnchor/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
 [connection signal="button_up" from="Backdrop/MenuAnchor/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
-[connection signal="value_changed" from="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeRow/VolumeSlider" to="." method="_on_volume_slider_value_changed"]
+[connection signal="value_changed" from="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/MusicRow/MusicSlider" to="." method="_on_music_slider_value_changed"]
+[connection signal="value_changed" from="Backdrop/MenuAnchor/VBoxContainer/VolumePanel/VolumeMargin/VolumeVBox/SfxRow/SfxSlider" to="." method="_on_sfx_slider_value_changed"]
 [connection signal="button_up" from="Backdrop/MenuAnchor/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]

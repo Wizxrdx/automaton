@@ -25,6 +25,7 @@ run/stretch/aspect="expand"
 RobotManager="*uid://cobem8k0c61mr"
 ItemManager="*uid://bhar0svosxsci"
 LevelManager="*uid://cvy0nobqqdgf1"
+BackgroundAmbientMusic="*uid://b2qlfi7kgq47d"
 
 [display]
 

@@ -9,30 +9,59 @@ var win_canvas: CanvasLayer = null
 var caught_canvas: CanvasLayer = null
 var pause_menu: CanvasLayer = null
 var is_caught: bool = false
-var master_volume: float = 1.0
+var music_volume: float = 1.0
+var sfx_volume: float = 1.0
 
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_ensure_audio_buses()
 	_load_settings()
-	set_master_volume(master_volume, false)
+	set_music_volume(music_volume, false)
+	set_sfx_volume(sfx_volume, false)
 	pause_menu = PAUSE_MENU_SCENE.instantiate()
 	add_child(pause_menu)
+
+func _ensure_audio_buses():
+	if AudioServer.get_bus_index("Music") == -1:
+		var idx = AudioServer.bus_count
+		AudioServer.add_bus(idx)
+		AudioServer.set_bus_name(idx, "Music")
+		AudioServer.set_bus_send(idx, "Master")
+	if AudioServer.get_bus_index("SFX") == -1:
+		var idx = AudioServer.bus_count
+		AudioServer.add_bus(idx)
+		AudioServer.set_bus_name(idx, "SFX")
+		AudioServer.set_bus_send(idx, "Master")
 
 func _load_settings():
 	var cfg = ConfigFile.new()
 	if cfg.load(SETTINGS_PATH) == OK:
-		master_volume = clamp(float(cfg.get_value("audio", "master_volume", 1.0)), 0.0, 1.0)
+		music_volume = clamp(float(cfg.get_value("audio", "music_volume", 1.0)), 0.0, 1.0)
+		sfx_volume = clamp(float(cfg.get_value("audio", "sfx_volume", 1.0)), 0.0, 1.0)
 
-func set_master_volume(value: float, save: bool = true):
-	master_volume = clamp(value, 0.0, 1.0)
-	var bus_idx = AudioServer.get_bus_index("Master")
+func _save_settings():
+	var cfg = ConfigFile.new()
+	cfg.set_value("audio", "music_volume", music_volume)
+	cfg.set_value("audio", "sfx_volume", sfx_volume)
+	cfg.save(SETTINGS_PATH)
+
+func _apply_bus_volume(bus_name: String, value: float):
+	var bus_idx = AudioServer.get_bus_index(bus_name)
 	if bus_idx >= 0:
-		AudioServer.set_bus_mute(bus_idx, master_volume <= 0.001)
-		AudioServer.set_bus_volume_db(bus_idx, linear_to_db(max(master_volume, 0.0001)))
+		AudioServer.set_bus_mute(bus_idx, value <= 0.001)
+		AudioServer.set_bus_volume_db(bus_idx, linear_to_db(max(value, 0.0001)))
+
+func set_music_volume(value: float, save: bool = true):
+	music_volume = clamp(value, 0.0, 1.0)
+	_apply_bus_volume("Music", music_volume)
 	if save:
-		var cfg = ConfigFile.new()
-		cfg.set_value("audio", "master_volume", master_volume)
-		cfg.save(SETTINGS_PATH)
+		_save_settings()
+
+func set_sfx_volume(value: float, save: bool = true):
+	sfx_volume = clamp(value, 0.0, 1.0)
+	_apply_bus_volume("SFX", sfx_volume)
+	if save:
+		_save_settings()
 
 func return_to_main_menu():
 	get_tree().paused = false

@@ -245,3 +245,4 @@ offset = Vector2(0, -32)
 [node name="walk" type="AudioStreamPlayer2D" parent="." unique_id=1922972422]
 stream = ExtResource("5_r1q7p")
 volume_db = -10.0
+bus = &"SFX"
