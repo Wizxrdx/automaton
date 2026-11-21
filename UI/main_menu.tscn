@@ -67,7 +67,7 @@ anchor_bottom = 0.5
 offset_left = 63.0
 offset_top = -12.0
 offset_right = 511.0
-offset_bottom = 218.0
+offset_bottom = 260.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -82,6 +82,41 @@ autoplay = &"play_ui"
 [node name="Button" type="Button" parent="VBoxContainer" unique_id=1876818327]
 layout_mode = 2
 text = "Start"
+
+[node name="VolumePanel" type="PanelContainer" parent="VBoxContainer" unique_id=778375307]
+layout_mode = 2
+
+[node name="VolumeMargin" type="MarginContainer" parent="VBoxContainer/VolumePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
+
+[node name="VolumeRow" type="HBoxContainer" parent="VBoxContainer/VolumePanel/VolumeMargin" unique_id=449931170]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="VolumeLabel" type="Label" parent="VBoxContainer/VolumePanel/VolumeMargin/VolumeRow" unique_id=414674785]
+layout_mode = 2
+text = "Volume"
+horizontal_alignment = 3
+vertical_alignment = 3
+
+[node name="VolumeSlider" type="HSlider" parent="VBoxContainer/VolumePanel/VolumeMargin/VolumeRow" unique_id=1674170188]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="VolumeValue" type="Label" parent="VBoxContainer/VolumePanel/VolumeMargin/VolumeRow" unique_id=191702034]
+custom_minimum_size = Vector2(44, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
 
 [node name="FadeOverlay" type="ColorRect" parent="." unique_id=788989379]
 self_modulate = Color(1, 1, 1, 0)
@@ -99,3 +134,4 @@ position = Vector2(448, 256)
 zoom = Vector2(0.345, 0.345)
 
 [connection signal="button_up" from="VBoxContainer/Button" to="." method="_on_start_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/VolumePanel/VolumeMargin/VolumeRow/VolumeSlider" to="." method="_on_volume_slider_value_changed"]

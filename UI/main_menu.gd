@@ -1,8 +1,14 @@
 extends Control
 
 @onready var level = $LevelInstance
+@onready var volume_slider: HSlider = $VBoxContainer/VolumePanel/VolumeMargin/VolumeRow/VolumeSlider
+@onready var volume_value: Label = $VBoxContainer/VolumePanel/VolumeMargin/VolumeRow/VolumeValue
 
 func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	volume_slider.set_value_no_signal(LevelManager.master_volume)
+	volume_value.text = str(int(round(LevelManager.master_volume * 100.0))) + "%"
+
 	# Force the level into background mode
 	level.is_menu_background = true
 	
@@ -45,5 +51,7 @@ func _on_start_button_pressed():
 	
 	self.queue_free()
 
-func _on_quit_button_pressed():
-	pass
+func _on_volume_slider_value_changed(value: float):
+	LevelManager.set_master_volume(value)
+	if volume_value:
+		volume_value.text = str(int(round(value * 100.0))) + "%"

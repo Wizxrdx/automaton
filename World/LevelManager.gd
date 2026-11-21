@@ -1,10 +1,63 @@
 extends Node
 
+const SETTINGS_PATH := "user://settings.cfg"
+const PAUSE_MENU_SCENE := preload("res://UI/pause_menu.tscn")
+
 var current_level_number = 1
 var saved_item_type = null 
 var win_canvas: CanvasLayer = null
 var caught_canvas: CanvasLayer = null
+var pause_menu: CanvasLayer = null
 var is_caught: bool = false
+var master_volume: float = 1.0
+
+func _ready():
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	_load_settings()
+	set_master_volume(master_volume, false)
+	pause_menu = PAUSE_MENU_SCENE.instantiate()
+	add_child(pause_menu)
+
+func _load_settings():
+	var cfg = ConfigFile.new()
+	if cfg.load(SETTINGS_PATH) == OK:
+		master_volume = clamp(float(cfg.get_value("audio", "master_volume", 1.0)), 0.0, 1.0)
+
+func set_master_volume(value: float, save: bool = true):
+	master_volume = clamp(value, 0.0, 1.0)
+	var bus_idx = AudioServer.get_bus_index("Master")
+	if bus_idx >= 0:
+		AudioServer.set_bus_mute(bus_idx, master_volume <= 0.001)
+		AudioServer.set_bus_volume_db(bus_idx, linear_to_db(max(master_volume, 0.0001)))
+	if save:
+		var cfg = ConfigFile.new()
+		cfg.set_value("audio", "master_volume", master_volume)
+		cfg.save(SETTINGS_PATH)
+
+func return_to_main_menu():
+	get_tree().paused = false
+	if is_instance_valid(pause_menu):
+		pause_menu.visible = false
+	if is_instance_valid(win_canvas):
+		win_canvas.queue_free()
+		win_canvas = null
+	if is_instance_valid(caught_canvas):
+		caught_canvas.queue_free()
+		caught_canvas = null
+	is_caught = false
+
+	var root = get_tree().root
+	for child in root.get_children():
+		if "Level" in child.name and child is Node2D:
+			child.queue_free()
+
+	current_level_number = 1
+	saved_item_type = null
+	RobotManager.saved_robot_data.clear()
+	RobotManager.level_start_robot_data.clear()
+	RobotManager.all_robots.clear()
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	get_tree().change_scene_to_file("res://UI/main_menu.tscn")
 
 func save_player_data(player_node):
 	var inv = player_node.get_node_or_null("Inventory")
@@ -137,8 +190,19 @@ func _input(event):
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 
+	# Pause menu toggle on Esc during active gameplay
+	if event.is_action_pressed("ui_cancel"):
+		var in_main_menu = get_tree().root.get_node_or_null("MainMenu") != null
+		if not in_main_menu and current_level_number <= 5 and not is_caught and is_instance_valid(pause_menu):
+			if pause_menu.visible:
+				pause_menu.close_menu()
+			else:
+				pause_menu.open_menu()
+			get_viewport().set_input_as_handled()
+			return
+
 	# Debug shortcuts (active when running from the editor / debug builds)
-	if OS.is_debug_build():
+	if OS.is_debug_build() and not get_tree().paused:
 		if event.keycode == KEY_F9 and current_level_number <= 5:
 			print("LevelManager [DEBUG]: Skipping to next level...")
 			load_next_level()
