@@ -116,7 +116,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nnufb"]
-size = Vector2(32, 64)
+size = Vector2(56, 72)
 
 [node name="Cleaner" type="CharacterBody2D" unique_id=2084668017]
 y_sort_enabled = true
@@ -136,6 +136,7 @@ offset = Vector2(0, -32)
 [node name="DetectionArea" type="Area2D" parent="." unique_id=172903365]
 position = Vector2(0, -48)
 collision_mask = 7
+input_pickable = false
 
 [node name="FlashlightVisual" type="Sprite2D" parent="DetectionArea" unique_id=1968575967]
 modulate = Color(1, 1, 1, 0.39215687)

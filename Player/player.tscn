@@ -167,6 +167,7 @@ shape = SubResource("RectangleShape2D_od3ui")
 collision_mask = 5
 
 [node name="PickupArea" type="Area2D" parent="." unique_id=280353336]
+input_pickable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea" unique_id=1672946176]
 position = Vector2(0, -5)

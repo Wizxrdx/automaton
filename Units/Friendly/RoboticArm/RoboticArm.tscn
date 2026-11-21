@@ -245,6 +245,7 @@ offset = Vector2(0, -32)
 
 [node name="DetectionArea" type="Area2D" parent="." unique_id=172903365]
 collision_mask = 5
+input_pickable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1851781024]
 position = Vector2(0, -16)
@@ -253,6 +254,7 @@ shape = SubResource("CapsuleShape2D_2ntxr")
 
 [node name="PickupArea" type="Area2D" parent="." unique_id=661516945]
 collision_mask = 13
+input_pickable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea" unique_id=1900956385]
 position = Vector2(0, -16)

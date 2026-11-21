@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://03vsulrl814u" path="res://Items/Types/battery.png" id="2_4apt4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1qkgg"]
-size = Vector2(32, 3)
+size = Vector2(44, 32)
 
 [node name="Battery" type="Area2D" unique_id=1795187254]
 y_sort_enabled = true
@@ -17,6 +17,7 @@ texture = ExtResource("2_4apt4")
 offset = Vector2(0, -32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2145133508]
+position = Vector2(0, -12)
 shape = SubResource("RectangleShape2D_1qkgg")
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

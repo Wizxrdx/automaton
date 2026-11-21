@@ -86,7 +86,7 @@ text = "Start"
 [node name="VolumePanel" type="PanelContainer" parent="VBoxContainer" unique_id=778375307]
 layout_mode = 2
 
-[node name="VolumeMargin" type="MarginContainer" parent="VBoxContainer/VolumePanel"]
+[node name="VolumeMargin" type="MarginContainer" parent="VBoxContainer/VolumePanel" unique_id=624428671]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 6

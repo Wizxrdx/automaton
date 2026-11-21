@@ -3,11 +3,11 @@
 [ext_resource type="PackedScene" uid="uid://b0k67nqfbiubd" path="res://Items/item.tscn" id="1_qjdnl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qjdnl"]
-size = Vector2(34, 5)
+size = Vector2(46, 30)
 
 [node name="Battery" unique_id=1795187254 instance=ExtResource("1_qjdnl")]
 item_type = "battery"
 
 [node name="CollisionShape2D" parent="." index="1" unique_id=2145133508]
-position = Vector2(0, -2.5)
+position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_qjdnl")
