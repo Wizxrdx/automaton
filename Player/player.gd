@@ -137,13 +137,46 @@ func _handle_pickup():
 	nearby_item = null
 	update_bubble_state()
 
+func _get_safe_drop_position(desired_pos: Vector2) -> Vector2:
+	var space_state = get_world_2d().direct_space_state
+	var origin = global_position
+	var to_target = desired_pos - origin
+	var dist = to_target.length()
+	if dist < 1.0:
+		return origin
+
+	# Check if a wall, closed door, or machine blocks the path from player feet to desired_pos
+	var ray_query = PhysicsRayQueryParameters2D.create(origin, desired_pos, 1, [self])
+	ray_query.collide_with_areas = false
+	ray_query.collide_with_bodies = true
+	var hit = space_state.intersect_ray(ray_query)
+
+	var candidate = desired_pos
+	if hit:
+		var hit_dist = origin.distance_to(hit.position)
+		var safe_dist = max(0.0, hit_dist - 16.0)
+		candidate = origin + to_target.normalized() * safe_dist
+
+	# Final check: ensure the candidate point itself isn't inside a world collider
+	var point_query = PhysicsPointQueryParameters2D.new()
+	point_query.position = candidate
+	point_query.collision_mask = 1
+	point_query.collide_with_areas = false
+	point_query.collide_with_bodies = true
+	point_query.exclude = [self]
+	if space_state.intersect_point(point_query, 1).size() > 0:
+		return origin
+
+	return candidate
+
 func _handle_swap():
 	is_busy = true
 	var type = nearby_item.get_item_type()
 	var old_item = nearby_item
+	var swap_pos = _get_safe_drop_position(old_item.global_position)
 	items_in_range.erase(old_item)
 	old_item.queue_free()
-	var dropped = inventory.drop_and_spawn(global_position + last_dir * 35)
+	var dropped = inventory.drop_and_spawn(swap_pos)
 	inventory.add_item(type)
 	nearby_item = dropped
 	update_bubble_state(true)
@@ -151,7 +184,8 @@ func _handle_swap():
 
 func _handle_normal_drop():
 	is_busy = true
-	var dropped = inventory.drop_and_spawn(global_position + last_dir * 35)
+	var drop_pos = _get_safe_drop_position(global_position + last_dir * 35)
+	var dropped = inventory.drop_and_spawn(drop_pos)
 	if is_instance_valid(dropped):
 		nearby_item = dropped
 	update_bubble_state()

@@ -52,13 +52,24 @@ func restore_level_start_robots():
 	all_robots.clear()
 
 func spawn_saved_robots(level_node, spawn_pos: Vector2):
+	var space_state = level_node.get_world_2d().direct_space_state if level_node is Node2D else null
 	for data in saved_robot_data:
 		var scene = robot_scenes.get(data.type)
 		if scene:
 			var new_bot = scene.instantiate()
 			level_node.add_child(new_bot)
-			# Spread them out slightly around the player
-			new_bot.global_position = spawn_pos + Vector2(randf_range(-30, 30), randf_range(-30, 30))
+			# Spread them out slightly around the player, clamped inside walls
+			var candidate = spawn_pos + Vector2(randf_range(-30, 30), randf_range(-30, 30))
+			if space_state:
+				var ray_query = PhysicsRayQueryParameters2D.create(spawn_pos, candidate, 1)
+				ray_query.collide_with_areas = false
+				ray_query.collide_with_bodies = true
+				var hit = space_state.intersect_ray(ray_query)
+				if hit:
+					var to_cand = candidate - spawn_pos
+					var safe_dist = max(0.0, spawn_pos.distance_to(hit.position) - 24.0)
+					candidate = spawn_pos + to_cand.normalized() * safe_dist
+			new_bot.global_position = candidate
 			
 			# Restore inventory
 			if data.item != null:

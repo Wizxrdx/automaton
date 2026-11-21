@@ -90,7 +90,7 @@ func revive_robot(player_ref):
 	if "player" in robot:
 		robot.player = player_ref
 	
-	robot.global_position = global_position + Vector2(0, 30)
+	robot.global_position = global_position
 	get_parent().add_child(robot)
 
 	# --- THE FIX ---
