@@ -27,7 +27,7 @@ func show_tutorial_labels():
 			await get_tree().create_timer(3.0).timeout # 1 second gap
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func _input(event):

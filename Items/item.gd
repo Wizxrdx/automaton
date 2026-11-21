@@ -12,9 +12,11 @@ func _ready():
 	add_to_group("item")
 	# Ensure Pickable is on so mouse signals work
 	input_pickable = true
-	# Connect mouse signals
-	mouse_entered.connect(_on_mouse_entered)
-	mouse_exited.connect(_on_mouse_exited)
+	# Connect mouse signals only if not already connected in the scene
+	if not mouse_entered.is_connected(_on_mouse_entered):
+		mouse_entered.connect(_on_mouse_entered)
+	if not mouse_exited.is_connected(_on_mouse_exited):
+		mouse_exited.connect(_on_mouse_exited)
 
 func get_item_type() -> String:
 	return item_type

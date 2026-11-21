@@ -11,6 +11,7 @@ enum TerminalState { READY, LOCKED, DISABLED }
 @export var should_teleport := false
 
 var is_open := false
+var has_teleported := false
 
 func _ready():
 	self.body_entered.connect(_on_body_entered)
@@ -24,7 +25,7 @@ func _ready():
 func can_interact() -> bool:
 	return current_state == TerminalState.READY and not is_open
 
-func interact(player_ref):
+func interact(_player_ref):
 	if current_state != TerminalState.READY or is_open:
 		return
 		
@@ -64,8 +65,7 @@ func set_highlight(state: bool):
 
 # Inside door.gd
 func _on_body_entered(body):
-	if is_open and should_teleport and body.is_in_group("player_group"):
+	if is_open and should_teleport and not has_teleported and body.is_in_group("player_group"):
+		has_teleported = true
 		print("Attempting teleport...")
-		# Use the engine's 'Engine.has_singleton' check if you're paranoid
-		# But usually, just calling the name works IF there is no local node named the same thing.
-		LevelManager.load_next_level()
+		LevelManager.call_deferred("load_next_level")
