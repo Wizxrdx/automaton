@@ -31,20 +31,10 @@ func drop_and_spawn(spawn_pos: Vector2) -> Node2D:
 	# Tell the Global Manager to do the heavy lifting
 	var spawned_item = ItemManager.spawn_item(held_item, spawn_pos)
 	
-	if spawned_item:
-		# Temporarily disable pickup so the player doesn't instantly grab it again
-		spawned_item.set_deferred("monitoring", false)
-		_prevent_immediate_pickup(spawned_item)
-	
 	held_item = null
 	_update_visuals()
 	
 	return spawned_item
-
-func _prevent_immediate_pickup(item_node: Node2D):
-	await get_tree().create_timer(0.2).timeout
-	if is_instance_valid(item_node):
-		item_node.set_deferred("monitoring", true)
 
 func _update_visuals():
 	if held_item and item_textures.has(held_item):

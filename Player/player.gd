@@ -74,6 +74,7 @@ func _process(_delta):
 			new_target.set_highlight(true)
 			
 		current_highlight = new_target
+		update_bubble_state()
 
 	# 4. INTERACTION INPUT
 	if Input.is_action_just_pressed("interact"):
@@ -83,6 +84,7 @@ func _process(_delta):
 					ray_obj.set_highlight(false)
 				current_highlight = null
 				ray_obj.interact(self)
+				update_bubble_state()
 				return
 				
 			if ray_obj.has_method("add_to_storage"):
@@ -105,40 +107,54 @@ func _process(_delta):
 # --- INTERACTION HANDLERS ---
 
 func _handle_agv_interact(agv_obj):
+	var did_swap = false
 	if inventory.has_item() and not agv_obj.has_item():
 		agv_obj.add_to_storage(inventory.held_item)
 		inventory.consume_item()
 	elif not inventory.has_item() and agv_obj.has_item():
 		var item = agv_obj.take_from_storage()
 		inventory.add_item(item)
+	elif inventory.has_item() and agv_obj.has_item():
+		var player_item = inventory.held_item
+		var agv_item = agv_obj.take_from_storage()
+		agv_obj.add_to_storage(player_item)
+		inventory.add_item(agv_item)
+		did_swap = true
 	
 	# After interacting, check if we should kill the highlight (e.g. if both are now empty)
 	if not inventory.has_item() and not agv_obj.has_item():
 		if agv_obj.has_method("set_highlight"):
 			agv_obj.set_highlight(false)
 		current_highlight = null
+	
+	update_bubble_state(did_swap)
 
 func _handle_pickup():
 	var item_to_pickup = nearby_item
 	inventory.add_item(item_to_pickup.get_item_type())
-	thought_system.hide_thought() 
 	items_in_range.erase(item_to_pickup)
 	item_to_pickup.queue_free()
 	nearby_item = null
+	update_bubble_state()
 
 func _handle_swap():
 	is_busy = true
 	var type = nearby_item.get_item_type()
-	items_in_range.erase(nearby_item)
-	nearby_item.queue_free()
-	nearby_item = null
-	await inventory.drop_and_spawn(global_position + last_dir * 35)
+	var old_item = nearby_item
+	items_in_range.erase(old_item)
+	old_item.queue_free()
+	var dropped = inventory.drop_and_spawn(global_position + last_dir * 35)
 	inventory.add_item(type)
+	nearby_item = dropped
+	update_bubble_state(true)
 	is_busy = false
 
 func _handle_normal_drop():
 	is_busy = true
-	await inventory.drop_and_spawn(global_position + last_dir * 35)
+	var dropped = inventory.drop_and_spawn(global_position + last_dir * 35)
+	if is_instance_valid(dropped):
+		nearby_item = dropped
+	update_bubble_state()
 	is_busy = false
 
 # --- ITEM DETECTION SYSTEM ---
@@ -155,7 +171,7 @@ func _update_closest_item():
 	
 	if nearby_item and not is_instance_valid(nearby_item):
 		nearby_item = null
-		thought_system.hide_thought()
+		update_bubble_state()
 		
 	var closest_dist = INF
 	var closest_item = null
@@ -168,10 +184,7 @@ func _update_closest_item():
 			
 	if closest_item != nearby_item:
 		nearby_item = closest_item
-		if is_instance_valid(nearby_item): 
-			update_bubble_state()
-		else: 
-			thought_system.hide_thought()
+		update_bubble_state()
 
 func _on_pickup_area_area_entered(area):
 	if area.has_method("get_item_type"):
@@ -180,9 +193,13 @@ func _on_pickup_area_area_entered(area):
 func _on_pickup_area_area_exited(area):
 	if items_in_range.has(area): items_in_range.erase(area)
 
-func update_bubble_state():
-	if is_instance_valid(nearby_item): 
-		thought_system.update_thought(nearby_item.get_item_type(), inventory.has_item())
+func update_bubble_state(force_pop: bool = false):
+	if is_instance_valid(current_highlight) and current_highlight.has_method("add_to_storage") and current_highlight.has_item():
+		thought_system.update_thought(current_highlight.inventory_system.held_item, inventory.has_item(), force_pop)
+	elif is_instance_valid(nearby_item): 
+		thought_system.update_thought(nearby_item.get_item_type(), inventory.has_item(), force_pop)
+	else:
+		thought_system.hide_thought()
 
 # --- ANIMATION & ROBOT COMMANDS ---
 
