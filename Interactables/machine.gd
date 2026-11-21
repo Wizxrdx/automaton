@@ -27,6 +27,11 @@ func _ready():
 	recipe_label.global_position = global_position + Vector2(-50, -80)
 	recipe_label.hide()
 
+func needs_item(item_type) -> bool:
+	if is_complete or item_type == null:
+		return false
+	return recipe.has(item_type) and current_inventory.get(item_type, 0) < recipe[item_type]
+
 func interact(player_ref):
 	if is_complete:
 		revive_robot(player_ref)

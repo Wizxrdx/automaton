@@ -21,6 +21,9 @@ func _ready():
 	if current_state == TerminalState.LOCKED:
 		terminal.get_node("Sprite2D").modulate = Color(1, 0.5, 0.5)
 
+func can_interact() -> bool:
+	return current_state == TerminalState.READY and not is_open
+
 func interact(player_ref):
 	if current_state != TerminalState.READY or is_open:
 		return

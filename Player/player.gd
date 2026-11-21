@@ -44,38 +44,72 @@ func _process(_delta):
 	if is_busy: return
 	_update_closest_item()
 
-	# Scan ALL colliders in InteractRay so walls/doors at index 0 never hide Terminals, Machines, or AGVs
-	var best_interactable = null
-	var best_interactable_dist = INF
+	# Scan ALL colliders in InteractRay and rank by 6-tier priority:
+	# 1. Ready Terminal  2. Ready-to-Revive Machine  3. Machine Needing Held Item
+	# 4. Interactable AGV  5. Ground Item  6. Incomplete Machine (Inspect)
+	var best_terminal = null
+	var best_terminal_dist = INF
+	var best_revive_machine = null
+	var best_revive_dist = INF
+	var best_deposit_machine = null
+	var best_deposit_dist = INF
 	var best_agv = null
 	var best_agv_dist = INF
+	var best_inspect_machine = null
+	var best_inspect_dist = INF
+
 	var player_has_item = inventory.has_item()
+	var held_item = inventory.held_item
 
 	for i in range(ray.get_collision_count()):
 		var col = ray.get_collider(i)
 		if not is_instance_valid(col):
 			continue
-		if col.has_method("interact"):
-			var d = global_position.distance_squared_to(col.global_position)
-			if d < best_interactable_dist:
-				best_interactable_dist = d
-				best_interactable = col
+		var d = global_position.distance_squared_to(col.global_position)
+
+		if col.is_in_group("terminal"):
+			if col.has_method("can_interact") and col.can_interact():
+				if d < best_terminal_dist:
+					best_terminal_dist = d
+					best_terminal = col
+		elif col.is_in_group("machine"):
+			if col.get("is_complete") == true:
+				if d < best_revive_dist:
+					best_revive_dist = d
+					best_revive_machine = col
+			elif player_has_item and col.has_method("needs_item") and col.needs_item(held_item):
+				if d < best_deposit_dist:
+					best_deposit_dist = d
+					best_deposit_machine = col
+			else:
+				if d < best_inspect_dist:
+					best_inspect_dist = d
+					best_inspect_machine = col
 		elif col.has_method("add_to_storage"):
 			if player_has_item or col.has_item():
-				var d = global_position.distance_squared_to(col.global_position)
 				if d < best_agv_dist:
 					best_agv_dist = d
 					best_agv = col
+		elif col.has_method("interact"):
+			if d < best_terminal_dist:
+				best_terminal_dist = d
+				best_terminal = col
 
 	var new_target = null
 
-	# --- UPDATED SELECTION PRIORITY LOGIC ---
-	if is_instance_valid(best_interactable):
-		new_target = best_interactable
+	# --- 6-TIER SELECTION PRIORITY LOGIC ---
+	if is_instance_valid(best_terminal):
+		new_target = best_terminal
+	elif is_instance_valid(best_revive_machine):
+		new_target = best_revive_machine
+	elif is_instance_valid(best_deposit_machine):
+		new_target = best_deposit_machine
 	elif is_instance_valid(best_agv):
 		new_target = best_agv
 	elif is_instance_valid(nearby_item):
 		new_target = nearby_item
+	elif is_instance_valid(best_inspect_machine):
+		new_target = best_inspect_machine
 
 	# 3. HIGHLIGHT SYSTEM
 	if new_target != current_highlight:
