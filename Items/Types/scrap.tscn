@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://b4xhyb2jx5wym" path="res://Items/Types/scrap.png" id="2_mgrji"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mgrji"]
-size = Vector2(56, 46)
+size = Vector2(48, 38)
 
 [node name="Scrap" unique_id=1795187254 instance=ExtResource("1_8chqy")]
 

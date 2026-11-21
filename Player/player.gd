@@ -44,24 +44,36 @@ func _process(_delta):
 	if is_busy: return
 	_update_closest_item()
 
-	var ray_obj = null
-	if ray.get_collision_count() > 0:
-		ray_obj = ray.get_collider(0)
+	# Scan ALL colliders in InteractRay so walls/doors at index 0 never hide Terminals, Machines, or AGVs
+	var best_interactable = null
+	var best_interactable_dist = INF
+	var best_agv = null
+	var best_agv_dist = INF
+	var player_has_item = inventory.has_item()
+
+	for i in range(ray.get_collision_count()):
+		var col = ray.get_collider(i)
+		if not is_instance_valid(col):
+			continue
+		if col.has_method("interact"):
+			var d = global_position.distance_squared_to(col.global_position)
+			if d < best_interactable_dist:
+				best_interactable_dist = d
+				best_interactable = col
+		elif col.has_method("add_to_storage"):
+			if player_has_item or col.has_item():
+				var d = global_position.distance_squared_to(col.global_position)
+				if d < best_agv_dist:
+					best_agv_dist = d
+					best_agv = col
 
 	var new_target = null
 
 	# --- UPDATED SELECTION PRIORITY LOGIC ---
-	if is_instance_valid(ray_obj) and ray_obj.has_method("interact"):
-		new_target = ray_obj
-		
-	elif is_instance_valid(ray_obj) and ray_obj.has_method("add_to_storage"):
-		# ONLY highlight the AGV if interaction is actually possible
-		var player_has_item = inventory.has_item()
-		var agv_has_item = ray_obj.has_item() # Assumes AGV.gd has this method
-		
-		if player_has_item or agv_has_item:
-			new_target = ray_obj
-			
+	if is_instance_valid(best_interactable):
+		new_target = best_interactable
+	elif is_instance_valid(best_agv):
+		new_target = best_agv
 	elif is_instance_valid(nearby_item):
 		new_target = nearby_item
 
@@ -76,24 +88,27 @@ func _process(_delta):
 		current_highlight = new_target
 		update_bubble_state()
 
-	# 4. INTERACTION INPUT
+	# 4. INTERACTION INPUT — always act on whatever is currently highlighted
 	if Input.is_action_just_pressed("interact"):
-		if is_instance_valid(ray_obj):
-			if ray_obj.has_method("interact"):
-				if ray_obj.has_method("set_highlight"):
-					ray_obj.set_highlight(false)
+		if is_instance_valid(current_highlight):
+			if current_highlight.has_method("interact"):
+				var target = current_highlight
+				if target.has_method("set_highlight"):
+					target.set_highlight(false)
 				current_highlight = null
-				ray_obj.interact(self)
+				target.interact(self)
 				update_bubble_state()
 				return
-				
-			if ray_obj.has_method("add_to_storage"):
-				# Only trigger the handler if a transfer is possible
-				if inventory.has_item() or ray_obj.has_item():
-					_handle_agv_interact(ray_obj)
+			elif current_highlight.has_method("add_to_storage"):
+				_handle_agv_interact(current_highlight)
 				return
-		
-		if is_instance_valid(nearby_item):
+			elif current_highlight == nearby_item:
+				if inventory.has_item():
+					_handle_swap()
+				else:
+					_handle_pickup()
+				return
+		elif is_instance_valid(nearby_item):
 			if inventory.has_item(): 
 				_handle_swap()
 			else: 

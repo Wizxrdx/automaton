@@ -4,6 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://ckgkf12sndwjd" path="res://Units/Friendly/RoboticArm/RoboticArm.tscn" id="2_g2fhc"]
 [ext_resource type="Texture2D" uid="uid://dwhbjgkchubm" path="res://Units/Friendly/RoboticArm/RoboticArm.png" id="3_optpb"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_arm"]
+size = Vector2(44, 44)
+
 [node name="RoboticArm" unique_id=896008313 instance=ExtResource("1_m6vix")]
 robot_scene = ExtResource("2_g2fhc")
 recipe = {
@@ -13,7 +16,8 @@ recipe = {
 }
 
 [node name="CollisionShape2D" parent="." index="0" unique_id=1832198024]
-position = Vector2(0, -12)
+position = Vector2(-0.5, -22)
+shape = SubResource("RectangleShape2D_arm")
 
 [node name="Sprite2D" parent="." index="1" unique_id=1807411384]
 texture = ExtResource("3_optpb")

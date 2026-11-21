@@ -116,7 +116,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nnufb"]
-size = Vector2(56, 72)
+size = Vector2(44, 64)
 
 [node name="Cleaner" type="CharacterBody2D" unique_id=2084668017]
 y_sort_enabled = true
@@ -156,7 +156,7 @@ target_position = Vector2(0, 32)
 [node name="InteractionArea" type="Area2D" parent="." unique_id=398523592]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=378909070]
-position = Vector2(0, -32)
+position = Vector2(-1, -32)
 shape = SubResource("RectangleShape2D_nnufb")
 
 [node name="walk" type="AudioStreamPlayer2D" parent="." unique_id=1869271836]
