@@ -14,6 +14,7 @@ var player: Node2D
 var neighbors: Array = [] 
 var current_anim = ""
 var highlighted := false
+var avoid_side := 0
 
 # NEW: Tracks if a Robotic Arm is currently on its way to load this AGV
 var is_reserved := false 
@@ -33,12 +34,18 @@ func _physics_process(_delta: float) -> void:
 	else:
 		move_sfx.stop()
 		
-	var to_player = player.global_position - global_position
-	var dist_sq = to_player.length_squared()
+	var waypoint = RobotManager.get_follow_waypoint(self, player, follow_distance)
+	var to_target = waypoint["pos"] - global_position
+	var stop_dist: float = waypoint["stop_dist"]
+	var dist_sq = to_target.length_squared()
 	var desired_velocity = Vector2.ZERO
 
-	if dist_sq > (follow_distance * follow_distance):
-		desired_velocity = to_player.normalized() * speed
+	if dist_sq > (stop_dist * stop_dist):
+		var steered = RobotManager.steer_around_obstacles(self, to_target, avoid_side)
+		avoid_side = steered["side"]
+		desired_velocity = steered["dir"] * speed
+	else:
+		avoid_side = 0
 	
 	desired_velocity += _calculate_separation()
 

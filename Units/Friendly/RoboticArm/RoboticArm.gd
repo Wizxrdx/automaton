@@ -24,6 +24,7 @@ var target_enemy: Node2D = null
 
 var is_mouse_hovering := false
 var latch_start_time: int = 0
+var avoid_side := 0
 
 func _ready():
 	RobotManager.register_robot(self)
@@ -150,7 +151,8 @@ func _physics_process(_delta: float) -> void:
 				else:
 					_drop_item_on_ground()
 			elif player:
-				move_towards_target(player.global_position, follow_distance)
+				var waypoint = RobotManager.get_follow_waypoint(self, player, follow_distance)
+				move_towards_target(waypoint["pos"], waypoint["stop_dist"])
 		State.MOVING_TO_ITEM:
 			if is_instance_valid(target_item):
 				move_towards_target(target_item.global_position, 0.0)
@@ -199,7 +201,11 @@ func move_towards_target(target_pos: Vector2, stop_distance: float) -> void:
 	var dist_sq = to_target.length_squared()
 	var desired_velocity = Vector2.ZERO
 	if dist_sq > (stop_distance * stop_distance):
-		desired_velocity = to_target.normalized() * speed
+		var steered = RobotManager.steer_around_obstacles(self, to_target, avoid_side)
+		avoid_side = steered["side"]
+		desired_velocity = steered["dir"] * speed
+	else:
+		avoid_side = 0
 	desired_velocity += _calculate_separation()
 	if desired_velocity.length_squared() > 25:
 		velocity = velocity.move_toward(desired_velocity, acceleration)
