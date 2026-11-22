@@ -2,6 +2,7 @@ extends Node
 
 const SETTINGS_PATH := "user://settings.cfg"
 const PAUSE_MENU_SCENE := preload("res://UI/pause_menu.tscn")
+const PIXEL_FONT := preload("res://UI/Pix32.ttf")
 
 var current_level_number = 1
 var saved_item_type = null 
@@ -134,23 +135,131 @@ func load_next_level():
 	get_tree().change_scene_to_file(next_path)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 
-# --- INSTANT WIN UI ---
+func _build_overlay_screen(
+	bg_color: Color,
+	title_text: String,
+	title_color: Color,
+	subtitle_text: String,
+	hint_text: String,
+	primary_text: String,
+	primary_cb: Callable,
+	secondary_text: String,
+	secondary_cb: Callable
+) -> CanvasLayer:
+	var canvas = CanvasLayer.new()
+	canvas.layer = 20
+	canvas.process_mode = Node.PROCESS_MODE_ALWAYS
+	get_tree().root.add_child(canvas)
+
+	var bg = ColorRect.new()
+	bg.color = bg_color
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.modulate.a = 0.0
+	canvas.add_child(bg)
+
+	var anchor = Control.new()
+	anchor.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	anchor.scale = Vector2(0.31, 0.31)
+	bg.add_child(anchor)
+
+	var center_box = CenterContainer.new()
+	center_box.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	center_box.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	center_box.grow_vertical = Control.GROW_DIRECTION_BOTH
+	anchor.add_child(center_box)
+
+	var panel = PanelContainer.new()
+	panel.custom_minimum_size = Vector2(460, 0)
+	center_box.add_child(panel)
+
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 32)
+	margin.add_theme_constant_override("margin_right", 32)
+	margin.add_theme_constant_override("margin_top", 28)
+	margin.add_theme_constant_override("margin_bottom", 24)
+	panel.add_child(margin)
+
+	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 12)
+	margin.add_child(vbox)
+
+	var title = Label.new()
+	title.text = title_text
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", PIXEL_FONT)
+	title.add_theme_font_size_override("font_size", 32)
+	title.add_theme_color_override("font_color", title_color)
+	vbox.add_child(title)
+
+	var subtitle = Label.new()
+	subtitle.text = subtitle_text
+	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	subtitle.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	subtitle.add_theme_font_size_override("font_size", 18)
+	subtitle.add_theme_color_override("font_color", Color(0.86, 0.89, 0.92))
+	vbox.add_child(subtitle)
+
+	var sep = HSeparator.new()
+	vbox.add_child(sep)
+
+	var primary_btn = Button.new()
+	primary_btn.text = primary_text
+	primary_btn.custom_minimum_size = Vector2(0, 38)
+	primary_btn.button_up.connect(primary_cb)
+	vbox.add_child(primary_btn)
+
+	var secondary_btn = Button.new()
+	secondary_btn.text = secondary_text
+	secondary_btn.custom_minimum_size = Vector2(0, 38)
+	secondary_btn.button_up.connect(secondary_cb)
+	vbox.add_child(secondary_btn)
+
+	var hint = Label.new()
+	hint.text = hint_text
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.add_theme_font_size_override("font_size", 13)
+	hint.add_theme_color_override("font_color", Color(0.62, 0.66, 0.70))
+	vbox.add_child(hint)
+
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	primary_btn.grab_focus()
+
+	var tween = canvas.create_tween().set_parallel(true)
+	tween.tween_property(bg, "modulate:a", 1.0, 0.22).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(anchor, "scale", Vector2(0.345, 0.345), 0.24).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	return canvas
+
+func restart_from_level_1():
+	if is_instance_valid(win_canvas):
+		win_canvas.queue_free()
+		win_canvas = null
+	if is_instance_valid(caught_canvas):
+		caught_canvas.queue_free()
+		caught_canvas = null
+	is_caught = false
+	current_level_number = 1
+	saved_item_type = null
+	RobotManager.saved_robot_data.clear()
+	RobotManager.level_start_robot_data.clear()
+	RobotManager.all_robots.clear()
+	get_tree().change_scene_to_file("res://World/Level1.tscn")
+	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
+
+# --- WIN SCREEN ---
 func show_win_screen():
 	if is_instance_valid(win_canvas):
 		win_canvas.queue_free()
-	win_canvas = CanvasLayer.new()
-	get_tree().root.add_child(win_canvas)
-	
-	var bg = ColorRect.new()
-	bg.color = Color(0, 0, 0, 0.85)
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	win_canvas.add_child(bg)
-	
-	var label = Label.new()
-	label.text = "FACILITY SECURED\n\nALL ROBOTS ACTIVE\n\nPress 'R' to Restart"
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	win_canvas.add_child(label)
+	win_canvas = _build_overlay_screen(
+		Color(0.03, 0.06, 0.05, 0.82),
+		"FACILITY SECURED",
+		Color(0.50, 0.95, 0.65),
+		"All sectors cleared. Every robot is back online.",
+		"Press [R] to Play Again",
+		"Play Again",
+		restart_from_level_1,
+		"Main Menu",
+		return_to_main_menu
+	)
 
 # --- CAUGHT / LOSE CONDITION ---
 func on_player_caught():
@@ -178,19 +287,17 @@ func on_player_caught():
 
 	if is_instance_valid(caught_canvas):
 		caught_canvas.queue_free()
-	caught_canvas = CanvasLayer.new()
-	get_tree().root.add_child(caught_canvas)
-
-	var bg = ColorRect.new()
-	bg.color = Color(0.15, 0.0, 0.0, 0.85)
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	caught_canvas.add_child(bg)
-
-	var label = Label.new()
-	label.text = "CAUGHT BY CLEANER\n\nPress 'R' to Retry Level"
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	caught_canvas.add_child(label)
+	caught_canvas = _build_overlay_screen(
+		Color(0.14, 0.02, 0.02, 0.82),
+		"CAUGHT BY CLEANER",
+		Color(1.0, 0.38, 0.38),
+		"Detected in Sector " + str(current_level_number) + ". Systems offline.",
+		"Press [R] to Retry Level",
+		"Retry Level",
+		restart_current_level,
+		"Main Menu",
+		return_to_main_menu
+	)
 
 func restart_current_level():
 	if is_instance_valid(caught_canvas):
@@ -249,12 +356,4 @@ func _input(event):
 
 	# Restart logic if player is on win screen
 	if current_level_number > 5 and event.keycode == KEY_R:
-		if is_instance_valid(win_canvas):
-			win_canvas.queue_free()
-			win_canvas = null
-		current_level_number = 1
-		saved_item_type = null
-		RobotManager.saved_robot_data.clear()
-		RobotManager.level_start_robot_data.clear()
-		RobotManager.all_robots.clear()
-		get_tree().change_scene_to_file("res://World/Level1.tscn")
+		restart_from_level_1()
