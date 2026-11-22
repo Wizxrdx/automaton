@@ -134,21 +134,18 @@ animation = &"south"
 offset = Vector2(0, -32)
 
 [node name="DetectionArea" type="Area2D" parent="." unique_id=172903365]
-position = Vector2(0, -48)
+position = Vector2(0, -8)
 collision_mask = 7
 input_pickable = false
 
 [node name="FlashlightVisual" type="Sprite2D" parent="DetectionArea" unique_id=1968575967]
 modulate = Color(1, 1, 1, 0.39215687)
 z_index = 1
-position = Vector2(0, 48)
 texture = ExtResource("3_nnufb")
-offset = Vector2(0, 67.085)
+offset = Vector2(0, 115)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="DetectionArea" unique_id=117332545]
-position = Vector2(0, 40)
-scale = Vector2(6.3184314, 1)
-polygon = PackedVector2Array(-20.258192, 192, 20.258192, 192, 1.266137, -40, 0, -40, -1.266137, -40)
+polygon = PackedVector2Array(0, 4, -104, 198, -62, 218, 0, 224, 62, 218, 104, 198)
 
 [node name="WallSensor" type="RayCast2D" parent="." unique_id=1596926423]
 target_position = Vector2(0, 32)
