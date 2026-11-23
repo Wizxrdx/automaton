@@ -214,10 +214,9 @@ func _sync_orientation(dir: Vector2):
 
 func _update_sprite_animation(dir: Vector2):
 	if dir.length() < 0.1: return
-	if abs(dir.x) > abs(dir.y):
-		sprite.play("east" if dir.x > 0 else "west")
-	else:
-		sprite.play("south" if dir.y > 0 else "north")
+	var dirs = ["east", "southeast", "south", "southwest", "west", "northwest", "north", "northeast"]
+	var idx = posmod(int(round(dir.angle() / (PI / 4.0))), 8)
+	sprite.play(dirs[idx])
 
 func _setup_cone_polygon():
 	if is_instance_valid(cone_poly):

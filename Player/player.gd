@@ -286,17 +286,16 @@ func update_bubble_state(force_pop: bool = false):
 
 # --- ANIMATION & ROBOT COMMANDS ---
 
+func _dir_to_8way(v: Vector2) -> String:
+	var dirs = ["east", "southeast", "south", "southwest", "west", "northwest", "north", "northeast"]
+	var idx = posmod(int(round(v.angle() / (PI / 4.0))), 8)
+	return dirs[idx]
+
 func update_animation(dir: Vector2):
 	if dir != Vector2.ZERO:
-		if abs(dir.x) > abs(dir.y): 
-			sprite.play("walk_east" if dir.x > 0 else "walk_west")
-		else: 
-			sprite.play("walk_south" if dir.y > 0 else "walk_north")
+		sprite.play("walk_" + _dir_to_8way(dir))
 	else:
-		if abs(last_dir.x) > abs(last_dir.y): 
-			sprite.play("idle_east" if last_dir.x > 0 else "idle_west")
-		else: 
-			sprite.play("idle_south" if last_dir.y > 0 else "idle_north")
+		sprite.play("idle_" + _dir_to_8way(last_dir))
 
 func _input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
